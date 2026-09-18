@@ -34,4 +34,4 @@ jobs:
           path: docs
       - name: Deploy
         id: deployment
-        uses: actions/deploy-pages@f81fdc11721a9be6c7dd07ee47b1a2a3c80348e2 # v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
