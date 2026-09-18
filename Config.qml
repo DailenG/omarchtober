@@ -411,14 +411,14 @@ Item {
             width: parent.width; spacing: 10
             Repeater {
               model: [
-                { key: "fun", label: "FUN", detail: "Friendly ghosts and costumed walkers. No blood, skeletons, zombies, or menace.", colour: "#71d4a1" },
-                { key: "scary", label: "SCARY", detail: "Undead silhouettes, grave risers, blood accents, and darker creature sounds.", colour: "#dc676d" }
+                { key: "fun", label: "FUN", detail: "Friendly ghosts and costumed walkers. No blood, skeletons, zombies, or menace.", colour: "#71d4a1", fill: "#2871d4a1" },
+                { key: "scary", label: "SCARY", detail: "Undead silhouettes, grave risers, blood accents, and darker creature sounds.", colour: "#dc676d", fill: "#28dc676d" }
               ]
               Rectangle {
                 id: modeCard
                 required property var modelData
                 width: Math.floor((content.width - 10) / 2); height: 92; radius: 11
-                color: root.config.experience.mode === modelData.key ? Qt.alpha(modelData.colour, 0.16) : "#140ffffff"
+                color: root.config.experience.mode === modelData.key ? modelData.fill : "#140ffffff"
                 border.width: root.config.experience.mode === modelData.key ? 2 : 1
                 border.color: root.config.experience.mode === modelData.key ? modelData.colour : "#3b493f4e"
                 Text { x: 15; y: 13; text: modeCard.modelData.label; color: modeCard.modelData.colour; font.family: root.fontFamily; font.pixelSize: 15; font.bold: true; font.letterSpacing: 1.5 }
