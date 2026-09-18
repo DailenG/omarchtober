@@ -331,7 +331,7 @@ Item {
           id: closeButton
           anchors { right: parent.right; rightMargin: 20; verticalCenter: parent.verticalCenter }
           width: 38; height: 38; radius: 19
-          color: closeHover.containsMouse ? "#33ffffff" : "#14ffffff"
+          color: closeHover.containsMouse ? "#ffffff33" : "#ffffff14"
           border.width: 1; border.color: "#667f7188"
           Text { anchors.centerIn: parent; text: "×"; color: "#eee7f0"; font.family: root.fontFamily; font.pixelSize: 23 }
           MouseArea { id: closeHover; anchors.fill: parent; hoverEnabled: true; onClicked: root.dismiss() }
@@ -411,14 +411,14 @@ Item {
             width: parent.width; spacing: 10
             Repeater {
               model: [
-                { key: "fun", label: "FUN", detail: "Friendly ghosts and costumed walkers. No blood, skeletons, zombies, or menace.", colour: "#71d4a1", fill: "#2871d4a1" },
-                { key: "scary", label: "SCARY", detail: "Undead silhouettes, grave risers, blood accents, and darker creature sounds.", colour: "#dc676d", fill: "#28dc676d" }
+                { key: "fun", label: "FUN", detail: "Friendly ghosts and costumed walkers. No blood, skeletons, zombies, or menace.", colour: "#71d4a1", fill: "#71d4a128" },
+                { key: "scary", label: "SCARY", detail: "Undead silhouettes, grave risers, blood accents, and darker creature sounds.", colour: "#dc676d", fill: "#dc676d28" }
               ]
               Rectangle {
                 id: modeCard
                 required property var modelData
                 width: Math.floor((content.width - 10) / 2); height: 92; radius: 11
-                color: root.config.experience.mode === modelData.key ? modelData.fill : "#14ffffff"
+                color: root.config.experience.mode === modelData.key ? modelData.fill : "#ffffff14"
                 border.width: root.config.experience.mode === modelData.key ? 2 : 1
                 border.color: root.config.experience.mode === modelData.key ? modelData.colour : "#3b493f4e"
                 Text { x: 15; y: 13; text: modeCard.modelData.label; color: modeCard.modelData.colour; font.family: root.fontFamily; font.pixelSize: 15; font.bold: true; font.letterSpacing: 1.5 }
@@ -458,13 +458,13 @@ Item {
                   anchors { right: parent.right; rightMargin: 10; verticalCenter: parent.verticalCenter }
                   spacing: 8
                   Rectangle {
-                    width: 32; height: 32; radius: 7; color: "#1effffff"
+                    width: 32; height: 32; radius: 7; color: "#ffffff1e"
                     Text { anchors.centerIn: parent; text: "−"; color: "#d9cedd"; font.family: root.fontFamily; font.pixelSize: 18 }
                     MouseArea { anchors.fill: parent; onClicked: root.changeElement(elementRow.modelData.key, -elementRow.modelData.step, elementRow.modelData.max) }
                   }
                   Text { width: 38; height: 32; text: String(root.config.elements[elementRow.modelData.key]).padStart(2, "0"); color: elementRow.modelData.accent; font.family: root.fontFamily; font.pixelSize: 17; font.bold: true; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
                   Rectangle {
-                    width: 32; height: 32; radius: 7; color: "#1effffff"
+                    width: 32; height: 32; radius: 7; color: "#ffffff1e"
                     Text { anchors.centerIn: parent; text: "+"; color: "#d9cedd"; font.family: root.fontFamily; font.pixelSize: 17 }
                     MouseArea { anchors.fill: parent; onClicked: root.changeElement(elementRow.modelData.key, elementRow.modelData.step, elementRow.modelData.max) }
                   }
@@ -490,7 +490,7 @@ Item {
                   id: paletteChip
                   required property var modelData
                   width: Math.floor((content.width - 32 - 24) / 4); height: 34; radius: 7
-                  color: root.config.art.palette === modelData.key ? modelData.accent : "#16ffffff"
+                  color: root.config.art.palette === modelData.key ? modelData.accent : "#ffffff16"
                   border.width: 1; border.color: modelData.accent
                   Text { anchors.centerIn: parent; text: paletteChip.modelData.label; color: root.config.art.palette === paletteChip.modelData.key ? "#100a13" : paletteChip.modelData.accent; font.family: root.fontFamily; font.pixelSize: 9; font.bold: true }
                   MouseArea { anchors.fill: parent; onClicked: root.mutate("art", "palette", paletteChip.modelData.key) }
@@ -502,13 +502,13 @@ Item {
               anchors { right: parent.right; rightMargin: 16; top: parent.top; topMargin: 87 }
               spacing: 8
               Rectangle {
-                width: 32; height: 30; radius: 6; color: "#1effffff"
+                width: 32; height: 30; radius: 6; color: "#ffffff1e"
                 Text { anchors.centerIn: parent; text: "−"; color: "#d9cedd"; font.family: root.fontFamily; font.pixelSize: 17 }
                 MouseArea { anchors.fill: parent; onClicked: root.mutate("elements", "lightning", root.config.elements.lightning - 5) }
               }
               Text { width: 54; height: 30; text: root.config.elements.lightning + "%"; color: root.accent; font.family: root.fontFamily; font.pixelSize: 13; font.bold: true; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
               Rectangle {
-                width: 32; height: 30; radius: 6; color: "#1effffff"
+                width: 32; height: 30; radius: 6; color: "#ffffff1e"
                 Text { anchors.centerIn: parent; text: "+"; color: "#d9cedd"; font.family: root.fontFamily; font.pixelSize: 16 }
                 MouseArea { anchors.fill: parent; onClicked: root.mutate("elements", "lightning", root.config.elements.lightning + 5) }
               }
@@ -518,13 +518,13 @@ Item {
               anchors { right: parent.right; rightMargin: 16; top: parent.top; topMargin: 130 }
               spacing: 8
               Rectangle {
-                width: 32; height: 30; radius: 6; color: "#1effffff"
+                width: 32; height: 30; radius: 6; color: "#ffffff1e"
                 Text { anchors.centerIn: parent; text: "−"; color: "#d9cedd"; font.family: root.fontFamily; font.pixelSize: 17 }
                 MouseArea { anchors.fill: parent; onClicked: root.mutate("elements", "animationSpeed", root.config.elements.animationSpeed - 0.1) }
               }
               Text { width: 54; height: 30; text: Number(root.config.elements.animationSpeed).toFixed(1) + "×"; color: root.accent; font.family: root.fontFamily; font.pixelSize: 13; font.bold: true; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
               Rectangle {
-                width: 32; height: 30; radius: 6; color: "#1effffff"
+                width: 32; height: 30; radius: 6; color: "#ffffff1e"
                 Text { anchors.centerIn: parent; text: "+"; color: "#d9cedd"; font.family: root.fontFamily; font.pixelSize: 16 }
                 MouseArea { anchors.fill: parent; onClicked: root.mutate("elements", "animationSpeed", root.config.elements.animationSpeed + 0.1) }
               }
@@ -546,7 +546,7 @@ Item {
             Text { x: 78; y: 72; text: root.config.sound.enabled ? "ENABLED" : "DISABLED"; color: root.config.sound.enabled ? root.accent : "#8a808e"; font.family: root.fontFamily; font.pixelSize: 10; font.bold: true }
             Rectangle {
               anchors { right: volumeRow.left; rightMargin: 14; top: parent.top; topMargin: 65 }
-              width: 78; height: 30; radius: 6; color: audioTest.running ? "#3322b684" : "#1effffff"; border.width: 1; border.color: "#52605765"
+              width: 78; height: 30; radius: 6; color: audioTest.running ? "#3322b684" : "#ffffff1e"; border.width: 1; border.color: "#52605765"
               Text { anchors.centerIn: parent; text: audioTest.running ? "PLAYING" : "TEST 8S"; color: audioTest.running ? "#78d9ad" : "#cfc5d3"; font.family: root.fontFamily; font.pixelSize: 9; font.bold: true }
               MouseArea { anchors.fill: parent; enabled: !audioTest.running; onClicked: root.testAudio() }
             }
@@ -555,13 +555,13 @@ Item {
               anchors { right: parent.right; rightMargin: 16; top: parent.top; topMargin: 66 }
               spacing: 7
               Rectangle {
-                width: 30; height: 28; radius: 6; color: "#1effffff"
+                width: 30; height: 28; radius: 6; color: "#ffffff1e"
                 Text { anchors.centerIn: parent; text: "−"; color: "#d9cedd"; font.family: root.fontFamily; font.pixelSize: 16 }
                 MouseArea { anchors.fill: parent; onClicked: root.mutate("sound", "volume", root.config.sound.volume - 5) }
               }
               Text { width: 46; height: 28; text: root.config.sound.volume + "%"; color: root.accent; font.family: root.fontFamily; font.pixelSize: 12; font.bold: true; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
               Rectangle {
-                width: 30; height: 28; radius: 6; color: "#1effffff"
+                width: 30; height: 28; radius: 6; color: "#ffffff1e"
                 Text { anchors.centerIn: parent; text: "+"; color: "#d9cedd"; font.family: root.fontFamily; font.pixelSize: 15 }
                 MouseArea { anchors.fill: parent; onClicked: root.mutate("sound", "volume", root.config.sound.volume + 5) }
               }
@@ -575,7 +575,7 @@ Item {
                   id: sourceChip
                   required property var modelData
                   width: 100; height: 30; radius: 6
-                  color: root.config.sound.source === modelData.key ? root.accent : "#1effffff"
+                  color: root.config.sound.source === modelData.key ? root.accent : "#ffffff1e"
                   border.width: 1; border.color: root.accent
                   Text { anchors.centerIn: parent; text: sourceChip.modelData.label; color: root.config.sound.source === sourceChip.modelData.key ? "#100a13" : root.accent; font.family: root.fontFamily; font.pixelSize: 9; font.bold: true }
                   MouseArea { anchors.fill: parent; onClicked: root.mutate("sound", "source", sourceChip.modelData.key) }
@@ -583,7 +583,7 @@ Item {
               }
             }
             Rectangle {
-              x: 310; y: 104; width: 116; height: 30; radius: 6; color: "#1effffff"; border.width: 1; border.color: "#52605765"
+              x: 310; y: 104; width: 116; height: 30; radius: 6; color: "#ffffff1e"; border.width: 1; border.color: "#52605765"
               Text { anchors.centerIn: parent; text: "CHOOSE FILE"; color: "#cfc5d3"; font.family: root.fontFamily; font.pixelSize: 9; font.bold: true }
               MouseArea { anchors.fill: parent; onClicked: root.chooseMedia() }
             }
@@ -601,7 +601,7 @@ Item {
                   id: audioLayer
                   required property var modelData
                   width: Math.floor((parent.width - 28) / 3); height: 78; radius: 8
-                  color: root.config.sound[audioLayer.modelData.key] ? "#24231b2a" : "#12ffffff"
+                  color: root.config.sound[audioLayer.modelData.key] ? "#24231b2a" : "#ffffff12"
                   border.width: 1; border.color: root.config.sound[audioLayer.modelData.key] ? root.accent : "#34423a46"
                   Text { x: 12; y: 13; text: audioLayer.modelData.label; color: root.config.sound[audioLayer.modelData.key] ? "#e4dce7" : "#7e7483"; font.family: root.fontFamily; font.pixelSize: 10; font.bold: true }
                   Text { x: 12; y: 37; text: audioLayer.modelData.detail; color: "#786e7d"; font.family: root.fontFamily; font.pixelSize: 9 }
@@ -651,21 +651,21 @@ Item {
         Text { x: 24; anchors.verticalCenter: parent.verticalCenter; text: root.statusLine; color: "#746a79"; font.family: root.fontFamily; font.pixelSize: 9; font.letterSpacing: 1 }
         Rectangle {
           anchors { right: stopButton.left; rightMargin: 10; verticalCenter: parent.verticalCenter }
-          width: 96; height: 40; radius: 8; color: resetHover.containsMouse ? "#2affffff" : "#14ffffff"; border.width: 1; border.color: "#4b5d5262"
+          width: 96; height: 40; radius: 8; color: resetHover.containsMouse ? "#ffffff2a" : "#ffffff14"; border.width: 1; border.color: "#4b5d5262"
           Text { anchors.centerIn: parent; text: "RESET"; color: "#c5b9c9"; font.family: root.fontFamily; font.pixelSize: 10; font.bold: true }
           MouseArea { id: resetHover; anchors.fill: parent; hoverEnabled: true; onClicked: root.restoreDefaults() }
         }
         Rectangle {
           id: stopButton
           anchors { right: launchButton.left; rightMargin: 10; verticalCenter: parent.verticalCenter }
-          width: 118; height: 40; radius: 8; color: stopHover.containsMouse ? "#30d86673" : "#14ffffff"; border.width: 1; border.color: "#61584452"
+          width: 118; height: 40; radius: 8; color: stopHover.containsMouse ? "#d8667330" : "#ffffff14"; border.width: 1; border.color: "#61584452"
           Text { anchors.centerIn: parent; text: "RETURN"; color: "#d69aa2"; font.family: root.fontFamily; font.pixelSize: 10; font.bold: true }
           MouseArea { id: stopHover; anchors.fill: parent; hoverEnabled: true; onClicked: root.stop() }
         }
         Rectangle {
           id: launchButton
           anchors { right: parent.right; rightMargin: 20; verticalCenter: parent.verticalCenter }
-          width: 182; height: 44; radius: 9; color: launchHover.containsMouse ? Qt.lighter(root.accent, 1.12) : root.accent; border.width: 1; border.color: "#b9ffffff"
+          width: 182; height: 44; radius: 9; color: launchHover.containsMouse ? Qt.lighter(root.accent, 1.12) : root.accent; border.width: 1; border.color: "#ffffffb9"
           Text { anchors.centerIn: parent; text: "BEGIN NIGHT  ›"; color: "#100a13"; font.family: root.fontFamily; font.pixelSize: 11; font.bold: true; font.letterSpacing: 0.7 }
           MouseArea { id: launchHover; anchors.fill: parent; hoverEnabled: true; onClicked: root.launch() }
         }
