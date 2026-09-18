@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+state_home=${XDG_STATE_HOME:-"$HOME/.local/state"}
+toggle_dir="$state_home/omarchy/toggles"
+toggle="$toggle_dir/screensaver-off"
+owner_dir="$state_home/omarchtober"
+owner="$owner_dir/owns-screensaver-off"
+umask 077
+
+new_marker() {
+  printf 'omarchtober-v1:%s:%s:%s\n' "${EPOCHREALTIME:-$SECONDS}" "$$" "$RANDOM"
+}
+create_exclusive() {
+  (set -o noclobber; printf '%s' "$2" >"$1") 2>/dev/null
+}
+matches_ownership() {
+  [[ -s $toggle && ! -L $toggle && -s $owner && ! -L $owner ]] && cmp -s -- "$toggle" "$owner"
+}
+
+case ${1:-status} in
+  enable)
+    mkdir -p -- "$toggle_dir" "$owner_dir"
+    if [[ ! -d $owner_dir || -L $owner_dir ]]; then
+      printf 'omarchtober: unsafe ownership directory: %s\n' "$owner_dir" >&2
+      exit 1
+    fi
+    chmod 700 -- "$owner_dir"
+    if [[ -L $toggle || -L $owner ]]; then
+      printf 'omarchtober: refusing symlinked integration state\n' >&2
+      exit 1
+    fi
+    if [[ ! -e $toggle ]]; then
+      marker=$(new_marker)
+      create_exclusive "$toggle" "$marker" || exit 1
+      if ! create_exclusive "$owner" "$marker"; then
+        current=
+        IFS= read -r current <"$toggle" || true
+        [[ $current == "${marker%$'\n'}" ]] && rm -f -- "$toggle"
+        exit 1
+      fi
+    elif [[ -f $toggle && -f $owner && ! -s $toggle && ! -s $owner ]]; then
+      marker=$(new_marker)
+      printf '%s' "$marker" >"$toggle"
+      printf '%s' "$marker" >"$owner"
+    fi
+    ;;
+  disable)
+    if matches_ownership; then rm -f -- "$toggle"; fi
+    if [[ -e $owner || -L $owner ]]; then rm -f -- "$owner"; fi
+    ;;
+  status)
+    if matches_ownership; then printf '%s\n' owned
+    elif [[ -e $toggle ]]; then printf '%s\n' user-disabled
+    else printf '%s\n' stock-enabled
+    fi
+    ;;
+  *) printf 'usage: %s {enable|disable|status}\n' "${0##*/}" >&2; exit 2 ;;
+esac

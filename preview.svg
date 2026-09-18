@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Omarchtober Haunted Estate</title>
+  <desc id="desc">A moonlit Victorian manor above a graveyard with clouds, bats, pumpkins, and friendly ghosts.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#211c42"/><stop offset=".58" stop-color="#100d22"/><stop offset="1" stop-color="#070710"/></linearGradient>
+    <radialGradient id="moon"><stop stop-color="#fff3c7"/><stop offset=".72" stop-color="#eedba4"/><stop offset="1" stop-color="#c4a770"/></radialGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#18221f"/><stop offset="1" stop-color="#070b0a"/></linearGradient>
+    <linearGradient id="house" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#39303d"/><stop offset="1" stop-color="#211c27"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="soft"><feGaussianBlur stdDeviation="18"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <g fill="#dad9e8" opacity=".75">
+    <circle cx="90" cy="95" r="2"/><circle cx="180" cy="170" r="3"/><circle cx="305" cy="84" r="2"/><circle cx="430" cy="205" r="2"/><circle cx="545" cy="113" r="3"/><circle cx="690" cy="66" r="2"/><circle cx="815" cy="168" r="2"/><circle cx="940" cy="92" r="3"/><circle cx="1090" cy="162" r="2"/><circle cx="1420" cy="95" r="3"/><circle cx="1510" cy="205" r="2"/><circle cx="1260" cy="58" r="2"/>
+  </g>
+  <circle cx="1245" cy="210" r="137" fill="url(#moon)" filter="url(#glow)"/>
+  <g fill="#bda777" opacity=".28"><ellipse cx="1190" cy="150" rx="29" ry="17"/><ellipse cx="1300" cy="242" rx="38" ry="22"/><ellipse cx="1212" cy="286" rx="18" ry="13"/><ellipse cx="1285" cy="128" rx="15" ry="22"/></g>
+  <g fill="#6a6078" opacity=".48" filter="url(#soft)"><ellipse cx="315" cy="212" rx="250" ry="42"/><ellipse cx="1050" cy="305" rx="330" ry="48"/><ellipse cx="1470" cy="372" rx="260" ry="44"/></g>
+  <g fill="none" stroke="#c5afcb" stroke-width="7" stroke-linecap="round" opacity=".8">
+    <path d="M1010 164q24-28 48 0q24-28 48 0"/><path d="M1400 290q17-20 34 0q17-20 34 0"/><path d="M255 315q20-23 40 0q20-23 40 0"/><path d="M780 132q14-17 28 0q14-17 28 0"/>
+  </g>
+  <path d="M0 665Q210 610 415 674T810 650T1190 671T1600 632V900H0Z" fill="url(#ground)"/>
+  <g fill="#101713"><path d="M25 690l60-194 55 194zM118 692l48-154 46 154zM1420 682l62-215 65 215zM1355 694l45-145 43 145z"/></g>
+  <g transform="translate(426 297)">
+    <path d="M65 360V196L140 129v-48l55-56 54 56v48l64-72 68 72v-48l56-56 55 56v48l78 67v164z" fill="url(#house)" stroke="#8e7d93" stroke-width="7"/>
+    <path d="M24 360h545M140 129h109M381 129h111M313 129v231" stroke="#a18ca4" stroke-width="7" fill="none"/>
+    <path d="M294 360v-95q19-34 38 0v95" fill="#120f17" stroke="#8e7d93" stroke-width="7"/>
+    <g fill="#f1b755" filter="url(#glow)"><rect x="104" y="222" width="40" height="58" rx="3"/><rect x="187" y="222" width="40" height="58" rx="3"/><rect x="405" y="222" width="40" height="58" rx="3"/><rect x="487" y="222" width="40" height="58" rx="3"/><rect x="278" y="162" width="38" height="55" rx="3"/><rect x="350" y="162" width="38" height="55" rx="3"/><rect x="169" y="103" width="39" height="48" rx="3"/><rect x="423" y="103" width="39" height="48" rx="3"/></g>
+    <g stroke="#563f59" stroke-width="5"><path d="M124 222v58M104 251h40M207 222v58M187 251h40M425 222v58M405 251h40M507 222v58M487 251h40"/></g>
+    <g fill="#ec8a39"><circle cx="80" cy="353" r="18"/><circle cx="548" cy="353" r="21"/></g>
+  </g>
+  <g stroke="#77837d" stroke-width="8" fill="#252d2a">
+    <path d="M145 737v-95q0-40 36-40t36 40v95z"/><path d="M287 766V648h82v118z"/><path d="M1195 753V635q0-38 34-38t34 38v118z"/><path d="M1370 779V672h92v107z"/>
+  </g>
+  <g stroke="#9da69f" stroke-width="6" opacity=".72"><path d="M181 621v77M158 647h46M328 664v72M305 688h46M1229 618v82M1205 648h48M1416 691v65M1393 715h46"/></g>
+  <g fill="#eef9ed" stroke="#a8d9bd" stroke-width="4"><path d="M95 777q0-58 39-58t39 58v55l-13-13-13 13-13-13-13 13-13-13-13 13z"/><circle cx="120" cy="754" r="5" fill="#252733" stroke="none"/><circle cx="146" cy="754" r="5" fill="#252733" stroke="none"/></g>
+  <g transform="translate(1055 763)" fill="#ef873c"><ellipse rx="48" ry="41"/><path d="M0-39q-4-28 18-42" fill="none" stroke="#71925d" stroke-width="10"/><path d="M-26-7l14-10 8 16zm52 0l-14-10-8 16zM-21 17h42l-8 12h-26z" fill="#381521"/></g>
+  <g fill="none" stroke="#ccb8d3" stroke-width="5" opacity=".75"><path d="M0 806q210-54 420 0t420 0t420 0t420 0"/><path d="M0 840q250-45 500 0t500 0t500 0"/></g>
+  <g transform="translate(62 70)"><text x="0" y="0" dominant-baseline="hanging" fill="#f0a04a" font-family="monospace" font-size="74" font-weight="700" letter-spacing="12">OMARCHTOBER</text><text x="4" y="92" fill="#d3c5d9" font-family="monospace" font-size="23" letter-spacing="5">A LIVING HALLOWEEN NIGHTSCAPE FOR OMARCHY</text></g>
+  <g transform="translate(62 814)" font-family="monospace" font-weight="700"><rect width="183" height="48" rx="24" fill="#6ed2a1"/><text x="91" y="31" text-anchor="middle" fill="#101713" font-size="20">FUN MODE</text><rect x="201" width="203" height="48" rx="24" fill="#d7646c"/><text x="302" y="31" text-anchor="middle" fill="#1d0d13" font-size="20">SCARY MODE</text></g>
+</svg>

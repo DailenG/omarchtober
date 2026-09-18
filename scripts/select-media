@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+selected=${1:-}
+start_dir=$HOME
+if [[ $selected == /* && -f $selected ]]; then
+  start_dir=$(dirname -- "$selected")
+fi
+
+if ! command -v zenity >/dev/null 2>&1; then
+  printf 'omarchtober: zenity is required for graphical media selection\n' >&2
+  exit 1
+fi
+
+picked=$(zenity --file-selection \
+  --title='Choose Halloween ambience audio or video' \
+  --filename="$start_dir/" \
+  --file-filter='Audio and video | *.mp3 *.mp4 *.m4a *.ogg *.opus *.flac *.wav *.webm' \
+  --file-filter='All files | *' 2>/dev/null || true)
+
+if [[ -n $picked ]]; then
+  if [[ $picked != /* || ${#picked} -gt 4096 || ! -f $picked ]]; then
+    printf 'omarchtober: file picker returned an invalid local file\n' >&2
+    exit 1
+  fi
+  printf '%s\n' "$picked"
+fi

@@ -1,0 +1,37 @@
+[
+  {
+    "key": "haunted_estate",
+    "name": "Haunted Estate",
+    "description": "Moonlit Victorian manor, graveyard, bats, pumpkins, and wandering visitors.",
+    "status": "available",
+    "priority": 1
+  },
+  {
+    "key": "witching_woods",
+    "name": "Witching Woods",
+    "description": "Crooked forest paths, a cauldron clearing, owls, and lantern-bearing travelers.",
+    "status": "planned",
+    "priority": 2
+  },
+  {
+    "key": "pumpkin_hollow",
+    "name": "Pumpkin Hollow",
+    "description": "A playful harvest village built for the gentlest Halloween setting.",
+    "status": "planned",
+    "priority": 3
+  },
+  {
+    "key": "gothic_manor",
+    "name": "Gothic Manor",
+    "description": "A close facade view with animated windows, webs, portraits, and hidden silhouettes.",
+    "status": "planned",
+    "priority": 4
+  },
+  {
+    "key": "cemetery_gate",
+    "name": "Cemetery Gate",
+    "description": "Iron gates, rolling fog, mausoleums, ravens, and a distant chapel.",
+    "status": "planned",
+    "priority": 5
+  }
+]

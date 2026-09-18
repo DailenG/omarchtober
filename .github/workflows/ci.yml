@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  behavior:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.14"]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run behavioral tests
+        run: python -m unittest discover -s tests -v
+      - name: Compile Python
+        run: python -m py_compile omarchtober/*.py omarchtober/scenes/*.py scripts/omarchtober.py
+      - name: Exercise adaptive snapshots
+        run: |
+          python scripts/omarchtober.py --snapshot --width 120 --height 36 --seed 7 > /tmp/standard.txt
+          python scripts/omarchtober.py --snapshot --width 200 --height 52 --seed 7 > /tmp/panoramic.txt
+          python scripts/omarchtober.py --check-config > /tmp/config.json
+      - name: Validate shell syntax
+        run: bash -n scripts/launch-omarchtober scripts/idle-integration scripts/select-media
+
+  package:
+    name: Marketplace structure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Validate manifest and entry points
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path.cwd().resolve()
+          manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+          required = {"schemaVersion", "id", "name", "version", "author", "description", "kinds", "entryPoints"}
+          assert not required - manifest.keys()
+          assert manifest["schemaVersion"] == 1
+          assert manifest["id"] == "dailen.omarchtober"
+          assert set(manifest["kinds"]) == {"service", "overlay"}
+          for kind, relative in manifest["entryPoints"].items():
+              path = (root / relative).resolve()
+              assert path.is_relative_to(root), f"{kind} escapes repository"
+              assert path.is_file(), f"missing {kind}: {relative}"
+          symlinks = [str(path.relative_to(root)) for path in root.rglob("*") if path.is_symlink()]
+          assert not symlinks, f"Marketplace packages cannot contain symlinks: {symlinks}"
+          PY
+      - name: Confirm publication assets
+        run: test -s README.md && test -s LICENSE && test -s preview.png && test -s SECURITY.md && test -s docs/index.html

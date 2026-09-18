@@ -1,0 +1,36 @@
+name: Scene proposal
+description: Propose an original Fun/Scary scene
+labels: [scene]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Original scene name
+    validations:
+      required: true
+  - type: textarea
+    id: concept
+    attributes:
+      label: Composition and motion
+      description: Describe location, layers, focal point, and animated elements without referencing protected film properties.
+    validations:
+      required: true
+  - type: textarea
+    id: fun
+    attributes:
+      label: Fun treatment
+      description: Explain child-friendly figures, props, timing, and audio.
+    validations:
+      required: true
+  - type: textarea
+    id: scary
+    attributes:
+      label: Scary treatment
+      description: Optional restrained original replacements.
+  - type: textarea
+    id: tiers
+    attributes:
+      label: Adaptive detail
+      description: What should Compact, Standard, Cinematic, and Panoramic layouts add?
+    validations:
+      required: true

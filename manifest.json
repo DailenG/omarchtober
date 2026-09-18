@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "dailen.omarchtober",
+  "name": "Omarchtober",
+  "version": "0.1.0",
+  "author": "Dailen Gunter",
+  "license": "MIT",
+  "description": "An original terminal-native Halloween nightscape for Omarchy with fun and scary modes.",
+  "kinds": [
+    "service",
+    "overlay"
+  ],
+  "keepLoaded": true,
+  "entryPoints": {
+    "service": "Service.qml",
+    "overlay": "Config.qml"
+  }
+}

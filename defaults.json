@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "experience": {
+    "mode": "fun",
+    "scene": "haunted_estate"
+  },
+  "elements": {
+    "stars": 60,
+    "clouds": 4,
+    "bats": 12,
+    "gravestones": 14,
+    "apparitions": 4,
+    "wanderers": 3,
+    "pumpkins": 8,
+    "lightning": 25,
+    "animationSpeed": 1.0
+  },
+  "art": {
+    "palette": "moonlit",
+    "showStatus": false
+  },
+  "sound": {
+    "enabled": false,
+    "volume": 22,
+    "source": "procedural",
+    "mediaPath": "",
+    "wind": true,
+    "thunder": true,
+    "creatures": true
+  },
+  "integration": {
+    "idleEnabled": true,
+    "exitOnPointerMotion": true
+  }
+}
