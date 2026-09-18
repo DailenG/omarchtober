@@ -58,11 +58,30 @@ HOUSE = (
     "______|______________|_||_|______________|______",
 )
 HOUSE_WIDTH = max(len(line) for line in HOUSE)
-PANORAMIC_HOUSE = tuple(
-    "".join(character * 2 for character in line)
-    for line in HOUSE
-    for _ in range(2)
-)
+def _scale_house(sprite: tuple[str, ...]) -> tuple[str, ...]:
+    """Double a sprite while preserving one-cell roof diagonals."""
+    glyphs = {
+        " ": ("  ", "  "),
+        "/": (" /", "/ "),
+        "\\": ("\\ ", " \\"),
+        "_": ("  ", "──"),
+        "|": ("│ ", "│ "),
+        "[": ("┌─", "└─"),
+        "]": ("─┐", "─┘"),
+    }
+    scaled: list[str] = []
+    for line in sprite:
+        top: list[str] = []
+        bottom: list[str] = []
+        for character in line:
+            upper, lower = glyphs.get(character, (character * 2, character * 2))
+            top.append(upper)
+            bottom.append(lower)
+        scaled.extend(("".join(top), "".join(bottom)))
+    return tuple(scaled)
+
+
+PANORAMIC_HOUSE = _scale_house(HOUSE)
 PANORAMIC_HOUSE_WIDTH = max(len(line) for line in PANORAMIC_HOUSE)
 ANNEX = (
     "       /\\       ",
@@ -226,9 +245,13 @@ class HauntedEstateScene(Scene):
             tree_y = ground_y - len(BARE_TREE) + 1
             canvas.sprite(max(1, house_x - 37), tree_y, BARE_TREE, self.palette["ground"])
             canvas.sprite(min(self.width - 17, house_x + house_width + 19), tree_y, BARE_TREE, self.palette["ground"])
+        trim_glyphs = frozenset("/\\_─┌┐└┘")
         for row, line in enumerate(house):
-            colour = self.palette["trim"] if any(char in line for char in "/\\_") else self.palette["house"]
-            canvas.text(house_x, house_y + row, line, colour)
+            y = house_y + row
+            for column, character in enumerate(line):
+                if character != " ":
+                    colour = self.palette["trim"] if character in trim_glyphs else self.palette["house"]
+                    canvas.put(house_x + column, y, character, colour)
         window_points = ((18, 4), (39, 4), (25, 7), (34, 7), (12, 9), (22, 9), (31, 9), (41, 9), (13, 13), (22, 13), (37, 13), (46, 13))
         for index, (wx, wy) in enumerate(window_points):
             glow = math.sin(self.elapsed * 0.8 + self.window_phases[index]) > -0.38
