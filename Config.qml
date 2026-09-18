@@ -418,7 +418,7 @@ Item {
                 id: modeCard
                 required property var modelData
                 width: Math.floor((content.width - 10) / 2); height: 92; radius: 11
-                color: root.config.experience.mode === modelData.key ? modelData.fill : "#140ffffff"
+                color: root.config.experience.mode === modelData.key ? modelData.fill : "#14ffffff"
                 border.width: root.config.experience.mode === modelData.key ? 2 : 1
                 border.color: root.config.experience.mode === modelData.key ? modelData.colour : "#3b493f4e"
                 Text { x: 15; y: 13; text: modeCard.modelData.label; color: modeCard.modelData.colour; font.family: root.fontFamily; font.pixelSize: 15; font.bold: true; font.letterSpacing: 1.5 }
@@ -601,7 +601,7 @@ Item {
                   id: audioLayer
                   required property var modelData
                   width: Math.floor((parent.width - 28) / 3); height: 78; radius: 8
-                  color: root.config.sound[audioLayer.modelData.key] ? "#24231b2a" : "#120ffffff"
+                  color: root.config.sound[audioLayer.modelData.key] ? "#24231b2a" : "#12ffffff"
                   border.width: 1; border.color: root.config.sound[audioLayer.modelData.key] ? root.accent : "#34423a46"
                   Text { x: 12; y: 13; text: audioLayer.modelData.label; color: root.config.sound[audioLayer.modelData.key] ? "#e4dce7" : "#7e7483"; font.family: root.fontFamily; font.pixelSize: 10; font.bold: true }
                   Text { x: 12; y: 37; text: audioLayer.modelData.detail; color: "#786e7d"; font.family: root.fontFamily; font.pixelSize: 9 }
