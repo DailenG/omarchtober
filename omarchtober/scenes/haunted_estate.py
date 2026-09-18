@@ -58,6 +58,12 @@ HOUSE = (
     "______|______________|_||_|______________|______",
 )
 HOUSE_WIDTH = max(len(line) for line in HOUSE)
+PANORAMIC_HOUSE = tuple(
+    "".join(character * 2 for character in line)
+    for line in HOUSE
+    for _ in range(2)
+)
+PANORAMIC_HOUSE_WIDTH = max(len(line) for line in PANORAMIC_HOUSE)
 ANNEX = (
     "       /\\       ",
     "      /  \\      ",
@@ -151,6 +157,10 @@ class HauntedEstateScene(Scene):
         if self.width < 75 or self.height < 25:
             return "compact"
         return "standard"
+    @property
+    def architecture_scale(self) -> int:
+        return 2 if self.detail_tier == "panoramic" and self.height >= 70 else 1
+
 
     def _sky(self, canvas: FrameBuffer, flash: bool) -> None:
         sky_height = max(8, int(self.height * 0.72))
@@ -201,36 +211,42 @@ class HauntedEstateScene(Scene):
             y = int(bat.y * self.height + math.sin(self.elapsed * 1.8 + bat.phase) * 1.8)
             canvas.sprite(x, y, sprite, self.palette["trim"])
 
-    def _house(self, canvas: FrameBuffer) -> tuple[int, int]:
+    def _house(self, canvas: FrameBuffer) -> tuple[int, int, int]:
         ground_y = self.height - max(5, self.height // 7)
-        house_x = (self.width - HOUSE_WIDTH) // 2
-        house_y = ground_y - len(HOUSE) + 1
-        if self.detail_tier in {"cinematic", "panoramic"}:
+        scale = self.architecture_scale
+        house = PANORAMIC_HOUSE if scale == 2 else HOUSE
+        house_width = PANORAMIC_HOUSE_WIDTH if scale == 2 else HOUSE_WIDTH
+        house_x = (self.width - house_width) // 2
+        house_y = ground_y - len(house) + 1
+        if self.detail_tier in {"cinematic", "panoramic"} and scale == 1:
             annex_y = ground_y - len(ANNEX) + 1
             canvas.sprite(house_x - 11, annex_y, ANNEX, self.palette["house"])
-            canvas.sprite(house_x + HOUSE_WIDTH - 5, annex_y, ANNEX, self.palette["house"])
+            canvas.sprite(house_x + house_width - 5, annex_y, ANNEX, self.palette["house"])
         if self.detail_tier == "panoramic":
             tree_y = ground_y - len(BARE_TREE) + 1
             canvas.sprite(max(1, house_x - 37), tree_y, BARE_TREE, self.palette["ground"])
-            canvas.sprite(min(self.width - 17, house_x + HOUSE_WIDTH + 19), tree_y, BARE_TREE, self.palette["ground"])
-        for row, line in enumerate(HOUSE):
+            canvas.sprite(min(self.width - 17, house_x + house_width + 19), tree_y, BARE_TREE, self.palette["ground"])
+        for row, line in enumerate(house):
             colour = self.palette["trim"] if any(char in line for char in "/\\_") else self.palette["house"]
             canvas.text(house_x, house_y + row, line, colour)
         window_points = ((18, 4), (39, 4), (25, 7), (34, 7), (12, 9), (22, 9), (31, 9), (41, 9), (13, 13), (22, 13), (37, 13), (46, 13))
         for index, (wx, wy) in enumerate(window_points):
             glow = math.sin(self.elapsed * 0.8 + self.window_phases[index]) > -0.38
             if glow:
-                canvas.put(house_x + wx, house_y + wy, "■", self.palette["window"])
+                for block_y in range(scale):
+                    for block_x in range(scale):
+                        canvas.put(house_x + wx * scale + block_x, house_y + wy * scale + block_y, "■", self.palette["window"])
         if self.config["experience"]["mode"] == "fun":
             colours = (self.palette["accent"], self.palette["window"], self.palette["specter"])
-            for index, x in enumerate(range(house_x + 10, house_x + HOUSE_WIDTH - 7, 4)):
-                canvas.put(x, house_y + 10, "•", colours[index % len(colours)])
+            step = 4 * scale
+            for index, x in enumerate(range(house_x + 10 * scale, house_x + house_width - 7 * scale, step)):
+                canvas.put(x, house_y + 10 * scale, "•", colours[index % len(colours)])
         else:
             for index, (wx, wy) in enumerate(window_points[::4]):
-                drop = int((self.elapsed * 1.2 + index * 1.7) % 4)
+                drop = int((self.elapsed * 1.2 + index * 1.7) % (4 * scale))
                 for offset in range(drop):
-                    canvas.put(house_x + wx, house_y + wy + 1 + offset, "│", (133, 20, 30))
-        return ground_y, house_x
+                    canvas.put(house_x + wx * scale, house_y + wy * scale + scale + offset, "│", (133, 20, 30))
+        return ground_y, house_x, house_width
 
     def _ground(self, canvas: FrameBuffer, ground_y: int) -> None:
         for y in range(ground_y, self.height):
@@ -251,11 +267,11 @@ class HauntedEstateScene(Scene):
                 for x in range(-offset, self.width, 17):
                     canvas.text(x, y, "~~~~~", fog_colour)
 
-    def _graveyard(self, canvas: FrameBuffer, ground_y: int, house_x: int) -> None:
+    def _graveyard(self, canvas: FrameBuffer, ground_y: int, house_x: int, house_width: int) -> None:
         for grave in self.graves:
             x = int(grave.x * max(1, self.width - 5))
-            if house_x - 2 < x < house_x + HOUSE_WIDTH + 2 and grave.variant % 2 == 0:
-                x = (x + HOUSE_WIDTH // 2) % max(1, self.width - 5)
+            if house_x - 2 < x < house_x + house_width + 2 and grave.variant % 2 == 0:
+                x = (x + house_width // 2) % max(1, self.width - 5)
             y = ground_y - 2 - grave.variant % 2
             shape = (" _ ", "/ \\", "|_|") if grave.variant % 2 else (".---.", "| + |", "|___|")
             canvas.sprite(x, y - len(shape) + 1, shape, mix(self.palette["trim"], self.palette["ground"], 0.35))
@@ -302,9 +318,9 @@ class HauntedEstateScene(Scene):
         self._moon(canvas)
         self._clouds(canvas)
         self._bats(canvas)
-        ground_y, house_x = self._house(canvas)
+        ground_y, house_x, house_width = self._house(canvas)
         self._ground(canvas, ground_y)
-        self._graveyard(canvas, ground_y, house_x)
+        self._graveyard(canvas, ground_y, house_x, house_width)
         self._pumpkins(canvas, ground_y)
         self._figures(canvas, ground_y)
         self._status(canvas)

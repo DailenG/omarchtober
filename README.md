@@ -95,7 +95,7 @@ The renderer derives detail from terminal cell dimensions:
 | Compact | below 75×25 | Essential silhouette and animation |
 | Standard | 75×25 | Full estate and graveyard |
 | Cinematic | 135×38 | Expanded wings, larger moon, detailed craters, iron fencing |
-| Panoramic | 190×48 | Bare trees, foreground fog, and wider environmental staging |
+| Panoramic | 190×48 | Bare trees, foreground fog, wide staging, and an enlarged manor on tall terminals |
 
 Configured stars, bats, graves, figures, walkers, clouds, and pumpkins never increase automatically.
 

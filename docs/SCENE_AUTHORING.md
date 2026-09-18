@@ -58,7 +58,7 @@ Support all tiers through composition, not glyph scaling:
 - Compact: below 75×25.
 - Standard: 75×25 and above.
 - Cinematic: 135×38 and above.
-- Panoramic: 190×48 and above.
+- Panoramic: 190×48 and above; tall terminals may enlarge focal architecture while adding wide scenery.
 
 Higher tiers may add static scenery, architectural texture, fog layers, and staging. Never change configured entity counts by tier.
 

@@ -87,10 +87,16 @@ class SceneBehaviorTests(unittest.TestCase):
         compact = HauntedEstateScene(70, 22, copy.deepcopy(config), seed=2)
         cinematic = HauntedEstateScene(150, 42, copy.deepcopy(config), seed=2)
         panoramic = HauntedEstateScene(200, 52, copy.deepcopy(config), seed=2)
+        short_panoramic = HauntedEstateScene(240, 69, copy.deepcopy(config), seed=2)
+        tall_panoramic = HauntedEstateScene(240, 70, copy.deepcopy(config), seed=2)
         self.assertEqual((compact.detail_tier, cinematic.detail_tier, panoramic.detail_tier), ("compact", "cinematic", "panoramic"))
         self.assertNotIn("†─", compact.render().plain())
         self.assertIn("†─", cinematic.render().plain())
         self.assertIn("~~~~~", panoramic.render().plain())
+        structural = set("_/\\|[]")
+        short_detail = sum(character in structural for character in short_panoramic.render().plain())
+        tall_detail = sum(character in structural for character in tall_panoramic.render().plain())
+        self.assertGreater(tall_detail, short_detail * 1.5)
         self.assertEqual(len(compact.bats), len(panoramic.bats))
 
     def test_snapshot_is_deterministic_for_seed_and_time(self) -> None:
