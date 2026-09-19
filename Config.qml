@@ -412,7 +412,7 @@ Item {
 
           ColumnLayout {
             Layout.fillWidth: true
-            Label { text: "ESTATE PARALLAX MOTION · " + Number(root.config.art.motion).toFixed(2); color: "#d8d3e4"; font.pixelSize: 11; font.bold: true }
+            Label { text: "AUTOMATIC CAMERA PACE · " + Number(root.config.art.motion).toFixed(2); color: "#d8d3e4"; font.pixelSize: 11; font.bold: true }
             DarkSlider { id: masterMotionSlider; Layout.fillWidth: true; from: 0; to: 2; value: root.config.art.motion; onMoved: root.updateConfig(function(next) { next.art.motion = masterMotionSlider.value }) }
           }
           ColumnLayout {

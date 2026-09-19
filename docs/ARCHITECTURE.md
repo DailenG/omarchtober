@@ -30,10 +30,10 @@ flowchart LR
 
 `visual/Screensaver.qml` owns presentation:
 
-- paired base-plate and transparent parallax-layer stacks alternate and crossfade inside a centered 16:9 art frame;
-- `PreserveAspectFit` keeps the complete 16:9 plate visible at every display aspect ratio—no scale or crop;
-- a scene may supply a local `assets/parallax/<scene>/layers.json` manifest with transparent, full-resolution same-canvas layers;
-- every manifest layer independently applies bounded autonomous drift, using its validated `depth`, amplitude, and opacity; Estate's source-derived feathered canopy and grounds layers remain native 2560×1440;
+- paired base-plate and transparent parallax-layer stacks alternate and crossfade inside a centered, clipped 16:9 art frame;
+- at `art.motion: 0`, `PreserveAspectFit` keeps the complete 16:9 plate visible at every display aspect ratio—no scale or crop;
+- at a positive motion pace, one shared bounded camera sweep scales each stack by 4% and travels left-to-right before returning, keeping the art frame covered without user interaction;
+- a scene may supply a local `assets/parallax/<scene>/layers.json` manifest with transparent, full-resolution same-canvas layers; Estate's layers shift independently relative to the shared camera sweep.
 - a theme overlay shifts the complete collection without recoloring source files;
 - a key, click, wheel, or optionally pointer motion closes the window after an arming delay.
 
@@ -78,7 +78,7 @@ Audio is disabled by default. No runtime network request occurs.
 | Configuration | 256 KiB input cap; atomic writes in mode-0700 directory |
 | Scene assets | Four packaged 2560×1440 WebP files; no remote loading |
 | Scene rotation | 15–900 seconds |
-| Estate parallax motion and depth | 0–2 |
+| Automatic camera pace and Estate parallax depth | 0–2 |
 | Custom media | Local regular files, allowlisted formats, 2 GiB maximum |
 | Audio leadership | One no-follow mode-0600 lock |
 | Network | None at runtime |

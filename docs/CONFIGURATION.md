@@ -16,8 +16,8 @@ Omarchtober writes normalized JSON atomically to `~/.config/omarchtober/config.j
 | Key | Values | Default | Meaning |
 |---|---|---|---|
 | `art.theme` | `moonlit`, `harvest`, `spectral`, `midnight` | `moonlit` | Color treatment applied as an overlay; bundled plates are never modified. |
-| `art.motion` | 0–2 | 0.7 | Master multiplier for authored parallax movement. `0` freezes parallax animation. |
-| `art.parallax` | 0–2 | 0.55 | Multiplies every scene's parallax-layer displacement and opacity. `0` returns the plate to its original static composition. |
+| `art.motion` | 0–2 | 0.7 | Automatic, non-interactive left-to-right camera-sweep pace. It also scales Estate's authored parallax drift. `0` freezes both. |
+| `art.parallax` | 0–2 | 0.55 | Multiplies Estate's transparent layer displacement and opacity. `0` hides those layers; combine with `art.motion: 0` for the exact static plate. |
 
 ## Sound
 

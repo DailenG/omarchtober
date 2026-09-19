@@ -22,6 +22,8 @@ Window {
   property var pendingIncoming: null
   property var pendingOutgoing: null
   property int transitionMs: 2800
+  property real cameraOffset: 0
+  readonly property real cameraAmplitude: artFrame.width * 0.0125
 
   function sessionCandidates() {
     var dirs = [
@@ -140,6 +142,15 @@ Window {
     property var layerSet: []
     property bool contentReady: false
     property var layerReadiness: []
+    transform: [
+      Scale {
+        origin.x: sceneStack.width / 2
+        origin.y: sceneStack.height / 2
+        xScale: root.motion > 0 ? 1.04 : 1
+        yScale: root.motion > 0 ? 1.04 : 1
+      },
+      Translate { x: root.cameraOffset }
+    ]
 
     function refreshContentReady() {
       var ready = scenePath.length > 0 && baseImage.status === Image.Ready && layerReadiness.length === layerSet.length
@@ -260,6 +271,23 @@ Window {
     anchors.fill: parent
     color: root.themeColor()
     opacity: root.themeOpacity()
+  }
+
+  SequentialAnimation on cameraOffset {
+    loops: Animation.Infinite
+    running: root.motion > 0 && root.scenePaths.length > 0
+    NumberAnimation {
+      from: -root.cameraAmplitude
+      to: root.cameraAmplitude
+      duration: 30000 / Math.max(0.25, root.motion)
+      easing.type: Easing.InOutSine
+    }
+    NumberAnimation {
+      from: root.cameraAmplitude
+      to: -root.cameraAmplitude
+      duration: 30000 / Math.max(0.25, root.motion)
+      easing.type: Easing.InOutSine
+    }
   }
 
   Timer { id: rotationTimer; repeat: true; onTriggered: root.nextScene() }
