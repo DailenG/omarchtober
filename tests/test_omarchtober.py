@@ -35,6 +35,7 @@ class ConfigurationTests(unittest.TestCase):
                 "art": {
                     "theme": "missing",
                     "motion": -8,
+                    "parallax": 8,
                     "effects": {"mist": 8, "flight": -2, "lanterns": "bad", "lightning": 0.4},
                 },
                 "sound": {"volume": -20, "source": "network", "mediaPath": 5},
@@ -50,6 +51,7 @@ class ConfigurationTests(unittest.TestCase):
             {
                 "theme": "moonlit",
                 "motion": 0,
+                "parallax": 2,
                 "effects": {"mist": 2, "flight": 0, "lanterns": 0.65, "lightning": 0.4},
             },
         )
@@ -67,7 +69,7 @@ class ConfigurationTests(unittest.TestCase):
                 "art": {"palette": "harvest"},
             }
         )
-        self.assertEqual(migrated["schemaVersion"], 3)
+        self.assertEqual(migrated["schemaVersion"], 4)
         self.assertEqual(migrated["experience"]["mode"], "scary")
         self.assertEqual(migrated["experience"]["scene"], "rotation")
         self.assertEqual(migrated["experience"]["enabledScenes"], list(SCENES))
@@ -98,6 +100,19 @@ class VisualCollectionTests(unittest.TestCase):
         paths = visual_player.scene_paths(config)
         self.assertEqual([path.name for path in paths], ["pumpkin-hollow.webp"])
 
+    def test_estate_parallax_layer_is_bundled_and_bounded(self) -> None:
+        config = defaults()
+        config["experience"]["scene"] = "haunted_estate"
+        layers = visual_player.scene_layers(visual_player.scene_paths(config))
+        self.assertEqual(len(layers), 1)
+        self.assertEqual(len(layers[0]), 1)
+        layer = layers[0][0]
+        self.assertEqual(layer["depth"], 1.0)
+        self.assertEqual(layer["xAmplitude"], 18.0)
+        self.assertEqual(layer["yAmplitude"], 7.0)
+        self.assertEqual(layer["opacity"], 0.5)
+        self.assertGreater(Path(layer["source"]).stat().st_size, 100_000)
+
     def test_session_handoff_exposes_private_normalized_payload(self) -> None:
         config = normalize_config(
             {
@@ -106,6 +121,7 @@ class VisualCollectionTests(unittest.TestCase):
                 "art": {
                     "theme": "spectral",
                     "motion": 9,
+                    "parallax": 0.8,
                     "effects": {"mist": 0.2, "flight": 0.4, "lanterns": 0.6, "lightning": 0.8},
                 },
                 "integration": {"exitOnPointerMotion": False},
@@ -129,6 +145,9 @@ class VisualCollectionTests(unittest.TestCase):
         self.assertEqual(payload["duration"], 900)
         self.assertEqual(payload["theme"], "spectral")
         self.assertEqual(payload["motion"], 2.0)
+        self.assertEqual(payload["parallaxDepth"], 0.8)
+        self.assertEqual(len(payload["layers"]), 1)
+        self.assertEqual(payload["layers"][0], [])
         self.assertEqual(payload["effects"], {"mist": 0.2, "flight": 0.4, "lanterns": 0.6, "lightning": 0.8})
         self.assertFalse(payload["exitOnMotion"])
 

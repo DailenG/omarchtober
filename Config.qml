@@ -16,7 +16,7 @@ Item {
   property string pendingSaveText: ""
   property string statusLine: "VISUAL COLLECTION READY"
   property var defaults: ({
-    schemaVersion: 3,
+    schemaVersion: 4,
     experience: {
       mode: "fun",
       scene: "rotation",
@@ -26,6 +26,7 @@ Item {
     art: {
       theme: "moonlit",
       motion: 0.7,
+      parallax: 0.55,
       effects: { mist: 0.7, flight: 0.6, lanterns: 0.65, lightning: 0.35 }
     },
     sound: { enabled: false, volume: 22, source: "procedural", mediaPath: "", wind: true, thunder: true, creatures: true },
@@ -83,7 +84,7 @@ Item {
   function alphaColor(value, opacity) { return Qt.rgba(value.r, value.g, value.b, opacity) }
   function normalise(raw) {
     var incoming = raw && typeof raw === "object" ? raw : ({})
-    if (incoming.schemaVersion !== 2 && incoming.schemaVersion !== 3) incoming = ({})
+    if (incoming.schemaVersion !== 2 && incoming.schemaVersion !== 3 && incoming.schemaVersion !== 4) incoming = ({})
     var next = clone(defaults)
     var experience = incoming.experience && typeof incoming.experience === "object" ? incoming.experience : ({})
     next.experience.mode = experience.mode === "scary" ? "scary" : "fun"
@@ -102,6 +103,7 @@ Item {
     var theme = String(art.theme || defaults.art.theme)
     next.art.theme = knownTheme(theme) ? theme : defaults.art.theme
     next.art.motion = Math.round(clamp(art.motion, 0, 2, defaults.art.motion) * 100) / 100
+    next.art.parallax = Math.round(clamp(art.parallax, 0, 2, defaults.art.parallax) * 100) / 100
     var effects = art.effects && typeof art.effects === "object" ? art.effects : ({})
     next.art.effects.mist = Math.round(clamp(effects.mist, 0, 2, defaults.art.effects.mist) * 100) / 100
     next.art.effects.flight = Math.round(clamp(effects.flight, 0, 2, defaults.art.effects.flight) * 100) / 100
@@ -326,7 +328,7 @@ Item {
     Rectangle {
       anchors.centerIn: parent
       width: Math.min(parent.width - 48, 1120)
-      height: Math.min(parent.height - 48, 760)
+      height: Math.min(parent.height - 48, 800)
       radius: 18
       color: "#f20a0b18"
       border.color: root.alphaColor(root.accent, 0.45)
@@ -423,6 +425,11 @@ Item {
             Layout.fillWidth: true
             Label { text: "SCENE DURATION · " + root.config.experience.rotationSeconds + "s"; color: "#d8d3e4"; font.pixelSize: 11; font.bold: true }
             DarkSlider { id: durationSlider; Layout.fillWidth: true; from: 15; to: 300; stepSize: 15; value: root.config.experience.rotationSeconds; onMoved: root.updateConfig(function(next) { next.experience.rotationSeconds = durationSlider.value }) }
+          }
+          ColumnLayout {
+            Layout.fillWidth: true
+            Label { text: "PARALLAX DEPTH · " + Number(root.config.art.parallax).toFixed(2); color: "#d8d3e4"; font.pixelSize: 11; font.bold: true }
+            DarkSlider { id: parallaxSlider; Layout.fillWidth: true; from: 0; to: 2; value: root.config.art.parallax; onMoved: root.updateConfig(function(next) { next.art.parallax = parallaxSlider.value }) }
           }
           ColumnLayout {
             Layout.fillWidth: true

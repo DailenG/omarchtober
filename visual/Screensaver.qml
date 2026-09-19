@@ -16,6 +16,11 @@ Window {
   property bool frontIsA: true
   property bool armed: false
   property real motion: Number(options.motion || 1.0)
+  property real parallaxDepth: 0.55
+  property var sceneLayers: []
+  property var foreground: ({})
+  property real foregroundDriftX: 0
+  property real foregroundDriftY: 0
   property real mist: 0.7
   property real flight: 0.6
   property real lanterns: 0.65
@@ -50,6 +55,11 @@ Window {
     return ({})
   }
 
+  function activateLayers(index) {
+    var layers = Array.isArray(sceneLayers[index]) ? sceneLayers[index] : []
+    foreground = layers.length && layers[0] && typeof layers[0] === "object" ? layers[0] : ({})
+  }
+
   function parseOptions() {
     var parsed = readSession()
     options = parsed && typeof parsed === "object" ? parsed : ({})
@@ -60,8 +70,11 @@ Window {
       if (file.length) files.push(file)
     }
     scenePaths = files
+    sceneLayers = Array.isArray(options.layers) ? options.layers : []
     var requested = Number(options.motion)
     motion = isFinite(requested) ? Math.max(0, Math.min(2, requested)) : 0.7
+    var requestedParallax = Number(options.parallaxDepth)
+    parallaxDepth = isFinite(requestedParallax) ? Math.max(0, Math.min(2, requestedParallax)) : 0.55
     var effects = options.effects && typeof options.effects === "object" ? options.effects : ({})
     var effectNames = ["mist", "flight", "lanterns", "lightning"]
     var effectDefaults = [0.7, 0.6, 0.65, 0.35]
@@ -78,6 +91,7 @@ Window {
       imageA.item.source = "file://" + scenePaths[0]
       imageA.opacity = 1
       imageB.opacity = 0
+      activateLayers(0)
     }
     armTimer.start()
     var seconds = Number(options.duration)
@@ -98,6 +112,7 @@ Window {
       imageB.opacity = 0
     }
     frontIsA = !frontIsA
+    activateLayers(sceneIndex)
   }
 
   function dismiss() {
@@ -130,15 +145,71 @@ Window {
       cache: true
       smooth: true
       mipmap: true
-      sourceSize.width: Math.min(3840, root.width)
-      sourceSize.height: Math.min(2160, root.height)
+      sourceSize.width: Math.min(3840, parent.width)
+      sourceSize.height: Math.min(2160, parent.height)
       Behavior on opacity { NumberAnimation { duration: root.transitionMs; easing.type: Easing.InOutCubic } }
     }
   }
 
-  Loader { id: imageA; anchors.fill: parent; sourceComponent: sceneImage }
-  Loader { id: imageB; anchors.fill: parent; sourceComponent: sceneImage }
+  Item {
+    id: artFrame
+    anchors.centerIn: parent
+    width: Math.min(root.width, root.height * 16 / 9)
+    height: width * 9 / 16
+    clip: false
+  }
 
+  Loader { id: imageA; anchors.fill: artFrame; sourceComponent: sceneImage }
+  Loader { id: imageB; anchors.fill: artFrame; sourceComponent: sceneImage }
+
+  Image {
+    id: foregroundPlane
+    anchors.fill: artFrame
+    source: root.foreground.source ? "file://" + root.foreground.source : ""
+    fillMode: Image.PreserveAspectFit
+    asynchronous: true
+    cache: true
+    smooth: true
+    mipmap: true
+    sourceSize.width: Math.min(3840, artFrame.width)
+    sourceSize.height: Math.min(2160, artFrame.height)
+    opacity: Math.min(0.72, Number(root.foreground.opacity || 0) * root.parallaxDepth)
+    transform: Translate { x: root.foregroundDriftX; y: root.foregroundDriftY }
+  }
+
+  SequentialAnimation on foregroundDriftX {
+    loops: Animation.Infinite
+    running: root.parallaxDepth > 0 && root.motion > 0 && foregroundPlane.source !== ""
+    NumberAnimation {
+      from: -Number(root.foreground.xAmplitude || 0) * root.parallaxDepth
+      to: Number(root.foreground.xAmplitude || 0) * root.parallaxDepth
+      duration: 38000 / Math.max(0.25, root.motion)
+      easing.type: Easing.InOutSine
+    }
+    NumberAnimation {
+      from: Number(root.foreground.xAmplitude || 0) * root.parallaxDepth
+      to: -Number(root.foreground.xAmplitude || 0) * root.parallaxDepth
+      duration: 38000 / Math.max(0.25, root.motion)
+      easing.type: Easing.InOutSine
+    }
+  }
+
+  SequentialAnimation on foregroundDriftY {
+    loops: Animation.Infinite
+    running: root.parallaxDepth > 0 && root.motion > 0 && foregroundPlane.source !== ""
+    NumberAnimation {
+      from: -Number(root.foreground.yAmplitude || 0) * root.parallaxDepth
+      to: Number(root.foreground.yAmplitude || 0) * root.parallaxDepth
+      duration: 51000 / Math.max(0.25, root.motion)
+      easing.type: Easing.InOutSine
+    }
+    NumberAnimation {
+      from: Number(root.foreground.yAmplitude || 0) * root.parallaxDepth
+      to: -Number(root.foreground.yAmplitude || 0) * root.parallaxDepth
+      duration: 51000 / Math.max(0.25, root.motion)
+      easing.type: Easing.InOutSine
+    }
+  }
   Rectangle {
     anchors.fill: parent
     color: root.themeColor()

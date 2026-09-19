@@ -30,17 +30,17 @@ flowchart LR
 
 `visual/Screensaver.qml` owns presentation:
 
-- two `Image` planes alternate and crossfade;
+- two `Image` planes alternate and crossfade inside a centered 16:9 art frame;
 - `PreserveAspectFit` keeps the complete 16:9 plate visible at every display aspect ratio—no scale or crop;
-- distant flying silhouettes, midground fog, foreground lantern motes, and storm light form independently animated stage planes;
+- a scene may supply a local `assets/parallax/<scene>/layers.json` manifest with transparent, full-resolution foreground layers;
+- the manifest drives bounded autonomous camera drift; the Estate foreground is source-derived, feathered, and preserved at native 2560×1440 quality;
+- distant flying silhouettes, midground fog, foreground lantern motes, and storm light form additional independently animated stage planes;
 - a theme overlay shifts the complete collection without recoloring source files;
 - a key, click, wheel, or optionally pointer motion closes the window after an arming delay.
 
-The player never rasterizes or mutates source art at runtime. Scene switches change image sources only at the configured interval.
-
 ## Scene contract
 
-A public scene is one bundled `2560×1440` WebP file in `assets/scenes/`, one stable snake-case key in `omarchtober.config.SCENES`, and one catalog entry in `scenes.json` and `Config.qml`.
+A public scene is one bundled `2560×1440` WebP file in `assets/scenes/`, one stable snake-case key in `omarchtober.config.SCENES`, and one catalog entry in `scenes.json` and `Config.qml`. Parallax-capable scenes additionally package transparent same-canvas WebP layers plus a manifest in `assets/parallax/<scene-file-stem>/`; scenes without layers remain fully supported.
 
 All plates must share the collection's authored language:
 
@@ -55,7 +55,7 @@ See [Scene Authoring](SCENE_AUTHORING.md) for production and acceptance requirem
 
 ## Configuration
 
-The QML control room and Python runtime normalize the same schema independently. A missing, malformed, partial, oversized, or out-of-range user file therefore cannot prevent startup. Schema version one migrates to the complete visual collection and retains compatible sound and integration settings.
+The QML control room and Python runtime normalize the same schema independently. A missing, malformed, partial, oversized, or out-of-range user file therefore cannot prevent startup. Schema versions one through three migrate safely to version four.
 
 ## Multi-monitor and idle behavior
 

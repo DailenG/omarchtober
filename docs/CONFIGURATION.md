@@ -1,6 +1,6 @@
 # Configuration Reference
 
-Omarchtober writes normalized JSON atomically to `~/.config/omarchtober/config.json`. The runtime caps input at 256 KiB and falls back to packaged defaults when the file is missing, malformed, oversized, or invalid. Schema versions one and two are migrated to version three.
+Omarchtober writes normalized JSON atomically to `~/.config/omarchtober/config.json`. The runtime caps input at 256 KiB and falls back to packaged defaults when the file is missing, malformed, oversized, or invalid. Schema versions one through three are migrated to version four.
 
 ## Experience
 
@@ -16,7 +16,8 @@ Omarchtober writes normalized JSON atomically to `~/.config/omarchtober/config.j
 | Key | Values | Default | Meaning |
 |---|---|---|---|
 | `art.theme` | `moonlit`, `harvest`, `spectral`, `midnight` | `moonlit` | Color treatment applied as an overlay; bundled plates are never modified. |
-| `art.motion` | 0–2 | 0.7 | Master multiplier for every atmosphere plane. `0` freezes atmosphere animation. |
+| `art.motion` | 0–2 | 0.7 | Master multiplier for every animated plane. `0` freezes parallax and atmosphere animation. |
+| `art.parallax` | 0–2 | 0.55 | Estate foreground displacement and opacity. `0` returns the plate to its original static composition. |
 | `art.effects.mist` | 0–2 | 0.7 | Midground fog drift and opacity. |
 | `art.effects.flight` | 0–2 | 0.6 | Distant flying-silhouette activity. |
 | `art.effects.lanterns` | 0–2 | 0.65 | Foreground lantern-mote flicker and opacity. |
@@ -47,7 +48,7 @@ Procedural layer switches have no effect when `source` is `media`. Custom media 
 
 ```json
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "experience": {
     "mode": "fun",
     "scene": "rotation",
@@ -57,6 +58,7 @@ Procedural layer switches have no effect when `source` is `media`. Custom media 
   "art": {
     "theme": "moonlit",
     "motion": 0.7,
+    "parallax": 0.55,
     "effects": { "mist": 0.7, "flight": 0.6, "lanterns": 0.65, "lightning": 0.35 }
   },
   "sound": {

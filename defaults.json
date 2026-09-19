@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "experience": {
     "mode": "fun",
     "scene": "rotation",
@@ -14,6 +14,7 @@
   "art": {
     "theme": "moonlit",
     "motion": 0.7,
+    "parallax": 0.55,
     "effects": {
       "mist": 0.7,
       "flight": 0.6,

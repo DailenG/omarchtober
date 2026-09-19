@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "canvas": { "width": 2560, "height": 1440 },
+  "layers": [
+    {
+      "id": "foreground",
+      "file": "foreground.webp",
+      "depth": 1.0,
+      "xAmplitude": 18,
+      "yAmplitude": 7,
+      "opacity": 0.5
+    }
+  ]
+}

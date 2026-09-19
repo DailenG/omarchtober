@@ -5,12 +5,13 @@ A scene is one original 16:9 illustrated plate presented by the shared visual pl
 ## Files to change
 
 1. Add `assets/scenes/<scene-key>.webp` — 2560×1440, compressed WebP, under 5 MiB.
-2. Add the snake-case key to `SCENES` in `omarchtober/config.py`.
-3. Map the key to its file in `SCENE_FILES` in `scripts/visual-player.py`.
-4. Add public metadata to `scenes.json`.
-5. Add the scene to the `scenes` model in `Config.qml`.
-6. Add or extend behavioral tests in `tests/`.
-7. Update `README.md`, `docs/CONFIGURATION.md`, `docs/index.html`, and the project preview.
+2. For real parallax, add `assets/parallax/<scene-file-stem>/layers.json` and transparent 2560×1440 WebP layer files. Layers must be authored or carefully source-derived; never use automated segmentation.
+3. Add the snake-case key to `SCENES` in `omarchtober/config.py`.
+4. Map the key to its file in `SCENE_FILES` in `scripts/visual-player.py`.
+5. Add public metadata to `scenes.json`.
+6. Add the scene to the `scenes` model in `Config.qml`.
+7. Add or extend behavioral tests in `tests/`.
+8. Update `README.md`, `docs/CONFIGURATION.md`, `docs/index.html`, and the project preview.
 
 Do not add a second configuration loader, player, asset resolver, or catalog.
 
@@ -25,6 +26,10 @@ Every plate must belong to the same collection at a glance:
 - four depth layers: foreground framing, mid architecture, treeline or horizon, sky;
 - no text, logos, watermarks, UI, or signatures;
 - composition readable in full-frame `PreserveAspectFit` presentation at 16:9, 16:10, and 21:9.
+
+## Parallax layer contract
+
+Parallax layers use the same `2560×1440` canvas as their base plate and preserve alpha outside the intended foreground. `layers.json` lists local layer files and bounded `depth`, `xAmplitude`, `yAmplitude`, and `opacity` values. At `art.parallax: 0`, the player must hide every supplied layer and reproduce the unmodified base plate. Test the static, default, and maximum depth settings at 4K before release.
 
 ## Content safety
 

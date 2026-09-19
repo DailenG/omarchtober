@@ -27,6 +27,49 @@ SCENE_FILES = {
     "midnight_mausoleum": "midnight-mausoleum.webp",
 }
 
+PARALLAX_ROOT = PLUGIN_DIR / "assets" / "parallax"
+
+
+def scene_layers(paths: list[Path]) -> list[list[dict[str, Any]]]:
+    root = PARALLAX_ROOT.resolve()
+    all_layers: list[list[dict[str, Any]]] = []
+    for path in paths:
+        metadata_path = root / path.stem / "layers.json"
+        try:
+            metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            all_layers.append([])
+            continue
+        entries = metadata.get("layers") if isinstance(metadata, dict) else []
+        layers: list[dict[str, Any]] = []
+        if not isinstance(entries, list):
+            all_layers.append(layers)
+            continue
+        for entry in entries:
+            if not isinstance(entry, dict) or not isinstance(entry.get("file"), str):
+                continue
+            source = (metadata_path.parent / entry["file"]).resolve()
+            if not source.is_relative_to(root) or not source.is_file():
+                continue
+            try:
+                depth = max(0.0, min(2.0, float(entry.get("depth", 1.0))))
+                x_amplitude = max(0.0, min(96.0, float(entry.get("xAmplitude", 0.0))))
+                y_amplitude = max(0.0, min(96.0, float(entry.get("yAmplitude", 0.0))))
+                opacity = max(0.0, min(1.0, float(entry.get("opacity", 0.5))))
+            except (TypeError, ValueError):
+                continue
+            layers.append(
+                {
+                    "source": str(source),
+                    "depth": depth,
+                    "xAmplitude": x_amplitude,
+                    "yAmplitude": y_amplitude,
+                    "opacity": opacity,
+                }
+            )
+        all_layers.append(layers)
+    return all_layers
+
 
 def scene_paths(config: dict[str, Any]) -> list[Path]:
     experience = config["experience"]
@@ -51,9 +94,11 @@ def write_session(config: dict[str, Any], paths: list[Path]) -> Path:
     directory.mkdir(parents=True, exist_ok=True, mode=0o700)
     payload = {
         "scenes": [str(path) for path in paths],
+        "layers": scene_layers(paths),
         "duration": config["experience"]["rotationSeconds"],
         "theme": config["art"]["theme"],
         "motion": config["art"]["motion"],
+        "parallaxDepth": config["art"]["parallax"],
         "effects": config["art"]["effects"],
         "exitOnMotion": config["integration"]["exitOnPointerMotion"],
     }

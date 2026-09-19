@@ -8,7 +8,8 @@ All notable changes follow Keep a Changelog. Versions use Semantic Versioning.
 
 - Replaced the terminal ANSI renderer with a GPU visual scene player: `scripts/visual-player.py` plus `visual/Screensaver.qml` present bundled 2560×1440 WebP plates fullscreen with full-frame aspect preservation, long crossfades, theme overlays, and independently animated atmosphere planes.
 - Reframed the control room as the Visual Collection: scene or full-collection rotation, enabled-scene selection, rotation interval, theme, master motion, and individual mist, flight, lantern, and storm controls.
-- Migrated configuration to schema version 3 with safe upgrades from versions 1 and 2; element counts, palettes, and status text were removed.
+- Migrated configuration to schema version 4 with safe upgrades from versions 1 through 3; element counts, palettes, and status text were removed.
+- Added an initial real-parallax asset pack for Haunted Estate: a transparent, source-derived 2560×1440 feathered foreground plus a validated local layer manifest. The new Parallax Depth control supports a pixel-faithful zero-depth baseline.
 - Rewrote README, architecture, configuration, scene-authoring, roadmap, security, agent instructions, and the project website around the authored visual collection.
 - Regenerated the project preview as a four-scene contact sheet.
 

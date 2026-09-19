@@ -8,7 +8,8 @@
 - Keep Fun mode a genuine content-safety boundary: no blood, gore, exposed remains, zombies, threatening faces, weapons, pursuit, or jump scares in bundled art or audio.
 - Use original Halloween archetypes. Never reproduce identifiable film characters, masks, houses, music, dialogue, logos, or branded scene names.
 - Keep scene art bundled locally as 2560×1440 WebP plates; never generate or download art at runtime.
-- Keep presentation non-destructive: crossfade, scale, fog, theme overlay, and lightning act on the stage, not on source assets.
+- Keep presentation non-destructive: full-frame crossfade, atmosphere layers, theme overlay, and lightning act on the stage, not on base plates.
+- Real parallax layers must be same-canvas transparent WebP assets declared by a bounded local manifest. `art.parallax: 0` must reproduce the base plate exactly.
 - Bound configuration input, rotation interval, motion multiplier, media file input, subprocesses, and caches.
 - Never edit `/usr/share/omarchy`; it is read-only reference material.
 - Preserve the `org.omarchy.screensaver` identity, multi-monitor sibling teardown, and Omarchy-owned lock behavior.
