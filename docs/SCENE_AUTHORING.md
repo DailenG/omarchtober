@@ -29,7 +29,7 @@ Every plate must belong to the same collection at a glance:
 
 ## Parallax layer contract
 
-Parallax layers use the same `2560×1440` canvas as their base plate and preserve alpha outside the intended foreground. `layers.json` lists local layer files and bounded `depth`, `xAmplitude`, `yAmplitude`, and `opacity` values. At `art.parallax: 0`, the player must hide every supplied layer and reproduce the unmodified base plate. Test the static, default, and maximum depth settings at 4K before release.
+Parallax layers use the same `2560×1440` canvas as their base plate and preserve alpha outside the intended foreground. `layers.json` lists local layer files and bounded `depth`, `xAmplitude`, `yAmplitude`, and `opacity` values; `depth` scales a layer's displacement relative to the global Parallax Depth control. At `art.parallax: 0`, the player must hide every supplied layer and reproduce the unmodified base plate. Test the static, default, and maximum depth settings at 4K before release.
 
 ## Content safety
 

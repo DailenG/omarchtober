@@ -17,7 +17,7 @@ Omarchtober writes normalized JSON atomically to `~/.config/omarchtober/config.j
 |---|---|---|---|
 | `art.theme` | `moonlit`, `harvest`, `spectral`, `midnight` | `moonlit` | Color treatment applied as an overlay; bundled plates are never modified. |
 | `art.motion` | 0–2 | 0.7 | Master multiplier for every animated plane. `0` freezes parallax and atmosphere animation. |
-| `art.parallax` | 0–2 | 0.55 | Estate foreground displacement and opacity. `0` returns the plate to its original static composition. |
+| `art.parallax` | 0–2 | 0.55 | Multiplies every scene's parallax-layer displacement and opacity. `0` returns the plate to its original static composition. |
 | `art.effects.mist` | 0–2 | 0.7 | Midground fog drift and opacity. |
 | `art.effects.flight` | 0–2 | 0.6 | Distant flying-silhouette activity. |
 | `art.effects.lanterns` | 0–2 | 0.65 | Foreground lantern-mote flicker and opacity. |

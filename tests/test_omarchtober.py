@@ -100,18 +100,24 @@ class VisualCollectionTests(unittest.TestCase):
         paths = visual_player.scene_paths(config)
         self.assertEqual([path.name for path in paths], ["pumpkin-hollow.webp"])
 
-    def test_estate_parallax_layer_is_bundled_and_bounded(self) -> None:
+    def test_estate_parallax_layers_are_bundled_and_depth_ordered(self) -> None:
         config = defaults()
         config["experience"]["scene"] = "haunted_estate"
         layers = visual_player.scene_layers(visual_player.scene_paths(config))
         self.assertEqual(len(layers), 1)
-        self.assertEqual(len(layers[0]), 1)
-        layer = layers[0][0]
-        self.assertEqual(layer["depth"], 1.0)
-        self.assertEqual(layer["xAmplitude"], 18.0)
-        self.assertEqual(layer["yAmplitude"], 7.0)
-        self.assertEqual(layer["opacity"], 0.5)
-        self.assertGreater(Path(layer["source"]).stat().st_size, 100_000)
+        self.assertEqual(len(layers[0]), 2)
+        canopy, grounds = layers[0]
+        self.assertEqual(canopy["depth"], 0.45)
+        self.assertEqual(canopy["xAmplitude"], 14.0)
+        self.assertEqual(canopy["yAmplitude"], 4.0)
+        self.assertEqual(canopy["opacity"], 0.37)
+        self.assertEqual(grounds["depth"], 1.0)
+        self.assertEqual(grounds["xAmplitude"], 20.0)
+        self.assertEqual(grounds["yAmplitude"], 8.0)
+        self.assertEqual(grounds["opacity"], 0.46)
+        self.assertLess(canopy["depth"], grounds["depth"])
+        for layer in (canopy, grounds):
+            self.assertGreater(Path(layer["source"]).stat().st_size, 100_000)
 
     def test_session_handoff_exposes_private_normalized_payload(self) -> None:
         config = normalize_config(

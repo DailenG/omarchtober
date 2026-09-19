@@ -30,10 +30,10 @@ flowchart LR
 
 `visual/Screensaver.qml` owns presentation:
 
-- two `Image` planes alternate and crossfade inside a centered 16:9 art frame;
+- paired base-plate and transparent parallax-layer stacks alternate and crossfade inside a centered 16:9 art frame;
 - `PreserveAspectFit` keeps the complete 16:9 plate visible at every display aspect ratio—no scale or crop;
-- a scene may supply a local `assets/parallax/<scene>/layers.json` manifest with transparent, full-resolution foreground layers;
-- the manifest drives bounded autonomous camera drift; the Estate foreground is source-derived, feathered, and preserved at native 2560×1440 quality;
+- a scene may supply a local `assets/parallax/<scene>/layers.json` manifest with transparent, full-resolution same-canvas layers;
+- every manifest layer independently applies bounded autonomous drift, using its validated `depth`, amplitude, and opacity; Estate's source-derived feathered canopy and grounds layers remain native 2560×1440;
 - distant flying silhouettes, midground fog, foreground lantern motes, and storm light form additional independently animated stage planes;
 - a theme overlay shifts the complete collection without recoloring source files;
 - a key, click, wheel, or optionally pointer motion closes the window after an arming delay.

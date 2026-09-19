@@ -18,9 +18,6 @@ Window {
   property real motion: Number(options.motion || 1.0)
   property real parallaxDepth: 0.55
   property var sceneLayers: []
-  property var foreground: ({})
-  property real foregroundDriftX: 0
-  property real foregroundDriftY: 0
   property real mist: 0.7
   property real flight: 0.6
   property real lanterns: 0.65
@@ -55,9 +52,8 @@ Window {
     return ({})
   }
 
-  function activateLayers(index) {
-    var layers = Array.isArray(sceneLayers[index]) ? sceneLayers[index] : []
-    foreground = layers.length && layers[0] && typeof layers[0] === "object" ? layers[0] : ({})
+  function layerSet(index) {
+    return Array.isArray(sceneLayers[index]) ? sceneLayers[index] : []
   }
 
   function parseOptions() {
@@ -91,7 +87,9 @@ Window {
       imageA.item.source = "file://" + scenePaths[0]
       imageA.opacity = 1
       imageB.opacity = 0
-      activateLayers(0)
+      layersA.layerSet = layerSet(0)
+      layersA.opacity = 1
+      layersB.opacity = 0
     }
     armTimer.start()
     var seconds = Number(options.duration)
@@ -104,15 +102,20 @@ Window {
     sceneIndex = (sceneIndex + 1) % scenePaths.length
     if (frontIsA) {
       imageB.item.source = "file://" + scenePaths[sceneIndex]
+      layersB.layerSet = layerSet(sceneIndex)
       imageB.opacity = 1
+      layersB.opacity = 1
       imageA.opacity = 0
+      layersA.opacity = 0
     } else {
       imageA.item.source = "file://" + scenePaths[sceneIndex]
+      layersA.layerSet = layerSet(sceneIndex)
       imageA.opacity = 1
+      layersA.opacity = 1
       imageB.opacity = 0
+      layersB.opacity = 0
     }
     frontIsA = !frontIsA
-    activateLayers(sceneIndex)
   }
 
   function dismiss() {
@@ -147,7 +150,6 @@ Window {
       mipmap: true
       sourceSize.width: Math.min(3840, parent.width)
       sourceSize.height: Math.min(2160, parent.height)
-      Behavior on opacity { NumberAnimation { duration: root.transitionMs; easing.type: Easing.InOutCubic } }
     }
   }
 
@@ -159,57 +161,89 @@ Window {
     clip: false
   }
 
-  Loader { id: imageA; anchors.fill: artFrame; sourceComponent: sceneImage }
-  Loader { id: imageB; anchors.fill: artFrame; sourceComponent: sceneImage }
-
-  Image {
-    id: foregroundPlane
+  Loader {
+    id: imageA
     anchors.fill: artFrame
-    source: root.foreground.source ? "file://" + root.foreground.source : ""
-    fillMode: Image.PreserveAspectFit
-    asynchronous: true
-    cache: true
-    smooth: true
-    mipmap: true
-    sourceSize.width: Math.min(3840, artFrame.width)
-    sourceSize.height: Math.min(2160, artFrame.height)
-    opacity: Math.min(0.72, Number(root.foreground.opacity || 0) * root.parallaxDepth)
-    transform: Translate { x: root.foregroundDriftX; y: root.foregroundDriftY }
+    sourceComponent: sceneImage
+    Behavior on opacity { NumberAnimation { duration: root.transitionMs; easing.type: Easing.InOutCubic } }
+  }
+  Loader {
+    id: imageB
+    anchors.fill: artFrame
+    sourceComponent: sceneImage
+    Behavior on opacity { NumberAnimation { duration: root.transitionMs; easing.type: Easing.InOutCubic } }
   }
 
-  SequentialAnimation on foregroundDriftX {
-    loops: Animation.Infinite
-    running: root.parallaxDepth > 0 && root.motion > 0 && foregroundPlane.source !== ""
-    NumberAnimation {
-      from: -Number(root.foreground.xAmplitude || 0) * root.parallaxDepth
-      to: Number(root.foreground.xAmplitude || 0) * root.parallaxDepth
-      duration: 38000 / Math.max(0.25, root.motion)
-      easing.type: Easing.InOutSine
-    }
-    NumberAnimation {
-      from: Number(root.foreground.xAmplitude || 0) * root.parallaxDepth
-      to: -Number(root.foreground.xAmplitude || 0) * root.parallaxDepth
-      duration: 38000 / Math.max(0.25, root.motion)
-      easing.type: Easing.InOutSine
+  component ParallaxStack: Item {
+    property var layerSet: []
+
+    Behavior on opacity { NumberAnimation { duration: root.transitionMs; easing.type: Easing.InOutCubic } }
+
+    Repeater {
+      model: parent.layerSet
+
+      delegate: Item {
+        id: layerPlane
+        required property int index
+        required property var modelData
+
+        anchors.fill: parent
+        property real driftX: 0
+        property real driftY: 0
+        transform: Translate { x: layerPlane.driftX; y: layerPlane.driftY }
+
+        Image {
+          anchors.fill: parent
+          source: layerPlane.modelData.source ? "file://" + layerPlane.modelData.source : ""
+          fillMode: Image.PreserveAspectFit
+          asynchronous: true
+          cache: true
+          smooth: true
+          mipmap: true
+          sourceSize.width: Math.min(3840, layerPlane.width)
+          sourceSize.height: Math.min(2160, layerPlane.height)
+          opacity: Math.min(0.72, Number(layerPlane.modelData.opacity) * root.parallaxDepth)
+        }
+
+        SequentialAnimation on driftX {
+          loops: Animation.Infinite
+          running: root.parallaxDepth > 0 && root.motion > 0 && String(layerPlane.modelData.source || "").length > 0
+          NumberAnimation {
+            from: -Number(layerPlane.modelData.xAmplitude) * Number(layerPlane.modelData.depth) * root.parallaxDepth
+            to: Number(layerPlane.modelData.xAmplitude) * Number(layerPlane.modelData.depth) * root.parallaxDepth
+            duration: (38000 + layerPlane.index * 3500) / Math.max(0.25, root.motion)
+            easing.type: Easing.InOutSine
+          }
+          NumberAnimation {
+            from: Number(layerPlane.modelData.xAmplitude) * Number(layerPlane.modelData.depth) * root.parallaxDepth
+            to: -Number(layerPlane.modelData.xAmplitude) * Number(layerPlane.modelData.depth) * root.parallaxDepth
+            duration: (38000 + layerPlane.index * 3500) / Math.max(0.25, root.motion)
+            easing.type: Easing.InOutSine
+          }
+        }
+
+        SequentialAnimation on driftY {
+          loops: Animation.Infinite
+          running: root.parallaxDepth > 0 && root.motion > 0 && String(layerPlane.modelData.source || "").length > 0
+          NumberAnimation {
+            from: -Number(layerPlane.modelData.yAmplitude) * Number(layerPlane.modelData.depth) * root.parallaxDepth
+            to: Number(layerPlane.modelData.yAmplitude) * Number(layerPlane.modelData.depth) * root.parallaxDepth
+            duration: (51000 + layerPlane.index * 4700) / Math.max(0.25, root.motion)
+            easing.type: Easing.InOutSine
+          }
+          NumberAnimation {
+            from: Number(layerPlane.modelData.yAmplitude) * Number(layerPlane.modelData.depth) * root.parallaxDepth
+            to: -Number(layerPlane.modelData.yAmplitude) * Number(layerPlane.modelData.depth) * root.parallaxDepth
+            duration: (51000 + layerPlane.index * 4700) / Math.max(0.25, root.motion)
+            easing.type: Easing.InOutSine
+          }
+        }
+      }
     }
   }
 
-  SequentialAnimation on foregroundDriftY {
-    loops: Animation.Infinite
-    running: root.parallaxDepth > 0 && root.motion > 0 && foregroundPlane.source !== ""
-    NumberAnimation {
-      from: -Number(root.foreground.yAmplitude || 0) * root.parallaxDepth
-      to: Number(root.foreground.yAmplitude || 0) * root.parallaxDepth
-      duration: 51000 / Math.max(0.25, root.motion)
-      easing.type: Easing.InOutSine
-    }
-    NumberAnimation {
-      from: Number(root.foreground.yAmplitude || 0) * root.parallaxDepth
-      to: -Number(root.foreground.yAmplitude || 0) * root.parallaxDepth
-      duration: 51000 / Math.max(0.25, root.motion)
-      easing.type: Easing.InOutSine
-    }
-  }
+  ParallaxStack { id: layersA; anchors.fill: artFrame; opacity: 0 }
+  ParallaxStack { id: layersB; anchors.fill: artFrame; opacity: 0 }
   Rectangle {
     anchors.fill: parent
     color: root.themeColor()

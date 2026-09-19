@@ -27,7 +27,7 @@ Every scene shares one visual language: midnight navy, ivory moonlight, lavender
 - Moonlit, Harvest, Spectral, and Midnight color treatments.
 - Full-frame presentation: the complete 16:9 illustration is never stretched or cropped.
 - Adjustable multi-plane atmosphere: mist, flying silhouettes, lantern motes, and storm light move independently over the static plate.
-- Haunted Estate adds a source-derived, feathered high-resolution foreground plane with a dedicated Parallax Depth control; `0` restores the exact static composition.
+- Haunted Estate adds two source-derived, feathered high-resolution depth layers with a dedicated Parallax Depth control; `0` restores the exact static composition.
 - Configurable master motion, parallax depth, atmosphere layers, and scene duration.
 - Optional locally synthesized ambience or user-selected local media.
 - Tray control, idle integration, pointer/key dismissal, and unchanged Omarchy lock ownership.
@@ -69,7 +69,7 @@ python3 scripts/omarchtober.py --audio-test 8
 
 ## Runtime
 
-`qml6` presents the scene assets through Qt Quick with `PreserveAspectFit`, so the complete authored 16:9 composition remains intact on every display. Two image planes crossfade without reconstructing the artwork. Haunted Estate also supplies a transparent, full-resolution feathered foreground asset that drifts independently from its base plate for real parallax; setting Parallax Depth to `0` hides it. Distant flying silhouettes, midground fog, foreground lantern motes, and storm light move at separate rates for additional depth. The launcher opens one fullscreen player on each monitor and preserves Omarchy's existing idle and lock lifecycle.
+`qml6` presents the scene assets through Qt Quick with `PreserveAspectFit`, so the complete authored 16:9 composition remains intact on every display. Paired base-plate and parallax-layer stacks crossfade as one scene, without reconstructing the artwork. Haunted Estate supplies transparent, full-resolution feathered canopy and grounds layers that drift at distinct manifest-defined depths over its base plate; setting Parallax Depth to `0` hides both. Distant flying silhouettes, midground fog, foreground lantern motes, and storm light move at separate rates for additional depth. The launcher opens one fullscreen player on each monitor and preserves Omarchy's existing idle and lock lifecycle.
 
 No runtime image generation, downloads, browser engine, remote assets, or privileged writes.
 
