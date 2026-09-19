@@ -1,0 +1,140 @@
+#!/usr/bin/env python3
+"""Launch the GPU-backed Omarchtober visual scene player."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import signal
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+from typing import Any
+
+PLUGIN_DIR = Path(__file__).resolve().parent.parent
+if str(PLUGIN_DIR) not in sys.path:
+    sys.path.insert(0, str(PLUGIN_DIR))
+
+from omarchtober.audio import AudioEngine
+from omarchtober.config import CONFIG_PATH, load_config
+
+SCENE_FILES = {
+    "haunted_estate": "haunted-estate.webp",
+    "witching_woods": "witching-woods.webp",
+    "pumpkin_hollow": "pumpkin-hollow.webp",
+    "midnight_mausoleum": "midnight-mausoleum.webp",
+}
+
+
+def scene_paths(config: dict[str, Any]) -> list[Path]:
+    experience = config["experience"]
+    selected = experience["scene"]
+    if selected != "rotation":
+        return [PLUGIN_DIR / "assets" / "scenes" / SCENE_FILES[selected]]
+    enabled = experience["enabledScenes"]
+    paths = [PLUGIN_DIR / "assets" / "scenes" / SCENE_FILES[key] for key in enabled if key in SCENE_FILES]
+    return paths or [PLUGIN_DIR / "assets" / "scenes" / SCENE_FILES["haunted_estate"]]
+
+
+def session_dir() -> Path:
+    runtime = os.environ.get("XDG_RUNTIME_DIR")
+    if runtime:
+        return Path(runtime) / "omarchtober"
+    cache = os.environ.get("XDG_CACHE_HOME") or str(Path.home() / ".cache")
+    return Path(cache) / "omarchtober"
+
+
+def write_session(config: dict[str, Any], paths: list[Path]) -> Path:
+    directory = session_dir()
+    directory.mkdir(parents=True, exist_ok=True, mode=0o700)
+    payload = {
+        "scenes": [str(path) for path in paths],
+        "duration": config["experience"]["rotationSeconds"],
+        "theme": config["art"]["theme"],
+        "motion": config["art"]["motion"],
+        "exitOnMotion": config["integration"]["exitOnPointerMotion"],
+    }
+    target = directory / "session.json"
+    handle, temporary = tempfile.mkstemp(dir=directory, prefix=".session-", suffix=".json")
+    with os.fdopen(handle, "w", encoding="utf-8") as stream:
+        json.dump(payload, stream)
+    os.chmod(temporary, 0o600)
+    os.replace(temporary, target)
+    return target
+
+
+def stop_visual_players() -> None:
+    subprocess.run(
+        ["pkill", "-f", "[q]ml6.*Screensaver.qml"],
+        check=False,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
+
+def run(config: dict[str, Any], sound_override: bool | None) -> int:
+    paths = scene_paths(config)
+    missing = [path for path in paths if not path.is_file()]
+    if missing:
+        print(f"omarchtober: missing scene asset: {missing[0]}", file=sys.stderr)
+        return 2
+
+    write_session(config, paths)
+    command = ["qml6", "-f", str(PLUGIN_DIR / "visual" / "Screensaver.qml")]
+
+    audio = AudioEngine(config)
+    sound_enabled = config["sound"]["enabled"] if sound_override is None else sound_override
+    child: subprocess.Popen[bytes] | None = None
+    stopping = False
+
+    def stop_handler(_signum: int, _frame: Any) -> None:
+        nonlocal stopping
+        stopping = True
+        if child and child.poll() is None:
+            child.terminate()
+
+    previous_handlers = {
+        sig: signal.signal(sig, stop_handler)
+        for sig in (signal.SIGINT, signal.SIGTERM, signal.SIGHUP, signal.SIGQUIT)
+    }
+    try:
+        if sound_enabled:
+            audio.start()
+        environment = dict(os.environ)
+        environment["QML_XHR_ALLOW_FILE_READ"] = "1"
+        child = subprocess.Popen(command, cwd=PLUGIN_DIR, env=environment)
+        return_code = child.wait()
+    finally:
+        audio.close()
+        for sig, handler in previous_handlers.items():
+            signal.signal(sig, handler)
+        if not stopping:
+            stop_visual_players()
+    return return_code
+
+
+def parse_args(argv: list[str]) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Omarchtober visual screensaver")
+    parser.add_argument("--config", type=Path, default=CONFIG_PATH)
+    parser.add_argument(
+        "--identity",
+        default="org.omarchy.screensaver",
+        help="argv marker used by Omarchy's screensaver start and stop contract",
+    )
+    sound = parser.add_mutually_exclusive_group()
+    sound.add_argument("--sound", action="store_true")
+    sound.add_argument("--no-sound", action="store_true")
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(sys.argv[1:] if argv is None else argv)
+    config = load_config(args.config)
+    override = True if args.sound else False if args.no_sound else None
+    return run(config, override)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

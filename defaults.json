@@ -1,23 +1,19 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "experience": {
     "mode": "fun",
-    "scene": "haunted_estate"
-  },
-  "elements": {
-    "stars": 60,
-    "clouds": 4,
-    "bats": 12,
-    "gravestones": 14,
-    "apparitions": 4,
-    "wanderers": 3,
-    "pumpkins": 8,
-    "lightning": 25,
-    "animationSpeed": 1.0
+    "scene": "rotation",
+    "enabledScenes": [
+      "haunted_estate",
+      "witching_woods",
+      "pumpkin_hollow",
+      "midnight_mausoleum"
+    ],
+    "rotationSeconds": 90
   },
   "art": {
-    "palette": "moonlit",
-    "showStatus": false
+    "theme": "moonlit",
+    "motion": 0.7
   },
   "sound": {
     "enabled": false,

@@ -1,38 +1,22 @@
 # Configuration Reference
 
-Omarchtober writes normalized JSON atomically to `~/.config/omarchtober/config.json`. The renderer caps input at 256 KiB and falls back to packaged defaults when the file is missing, malformed, oversized, or invalid.
+Omarchtober writes normalized JSON atomically to `~/.config/omarchtober/config.json`. The runtime caps input at 256 KiB and falls back to packaged defaults when the file is missing, malformed, oversized, or invalid. Schema version one is migrated to the complete visual collection.
 
 ## Experience
 
 | Key | Values | Default | Meaning |
 |---|---|---|---|
-| `experience.mode` | `fun`, `scary` | `fun` | Global content treatment. Fun is the family-friendly safety boundary. |
-| `experience.scene` | registered scene key | `haunted_estate` | Active scene. Unknown and planned keys fall back safely. |
-
-## Elements
-
-| Key | Range | Default |
-|---|---:|---:|
-| `stars` | 0–160 | 60 |
-| `clouds` | 0–12 | 4 |
-| `bats` | 0–40 | 12 |
-| `gravestones` | 0–36 | 14 |
-| `apparitions` | 0–12 | 4 |
-| `wanderers` | 0–10 | 3 |
-| `pumpkins` | 0–24 | 8 |
-| `lightning` | 0–100 | 25 |
-| `animationSpeed` | 0.25–2.0 | 1.0 |
-
-Counts are exact. Adaptive detail tiers never add configured entities. The active scene maps `apparitions` and `wanderers` to mode-safe visual treatments.
+| `experience.mode` | `fun`, `scary` | `fun` | Content treatment. The bundled collection is family-safe in both modes; Scary deepens ambience and audio. |
+| `experience.scene` | `rotation`, `haunted_estate`, `witching_woods`, `pumpkin_hollow`, `midnight_mausoleum` | `rotation` | Fixed scene or full-collection rotation. Unknown keys fall back safely. |
+| `experience.enabledScenes` | array of scene keys | all four | Scenes used while rotating. Empty or unknown lists fall back to the full collection. |
+| `experience.rotationSeconds` | 15–900 | 90 | Seconds each scene is displayed before crossfading. |
 
 ## Art
 
-| Key | Values | Default |
-|---|---|---|
-| `art.palette` | `moonlit`, `harvest`, `spectral`, `monochrome` | `moonlit` |
-| `art.showStatus` | boolean | `false` |
-
-Status text is disabled by default so the nightscape remains a pure composition.
+| Key | Values | Default | Meaning |
+|---|---|---|---|
+| `art.theme` | `moonlit`, `harvest`, `spectral`, `midnight` | `moonlit` | Color treatment applied as an overlay; bundled plates are never modified. |
+| `art.motion` | 0–2 | 0.7 | Multiplier for breathing scale, fog drift, and lightning frequency. `0` freezes motion. |
 
 ## Sound
 
@@ -46,33 +30,27 @@ Status text is disabled by default so the nightscape remains a pure composition.
 | `sound.thunder` | boolean | `true` | Sparse rumbles; softened in Fun mode. |
 | `sound.creatures` | boolean | `true` | Nocturnal calls; gentler and higher in Fun mode. |
 
-Procedural layer switches have no effect when `source` is `media`. Custom media uses audio only and loops until the screensaver exits.
+Procedural layer switches have no effect when `source` is `media`. Custom media uses audio only and loops until the screensaver exits. Only one process becomes the audio leader on multi-monitor systems.
 
 ## Integration
 
 | Key | Values | Default | Meaning |
 |---|---|---|---|
 | `integration.idleEnabled` | boolean | `true` | Follow Omarchy's configured screensaver timeout and Keep Awake state. |
-| `integration.exitOnPointerMotion` | boolean | `true` | Pointer movement dismisses; clicks and keys always dismiss. |
+| `integration.exitOnPointerMotion` | boolean | `true` | Pointer movement dismisses; clicks, wheel, and keys always dismiss. |
 
 ## Example
 
 ```json
 {
-  "schemaVersion": 1,
-  "experience": { "mode": "fun", "scene": "haunted_estate" },
-  "elements": {
-    "stars": 60,
-    "clouds": 4,
-    "bats": 12,
-    "gravestones": 14,
-    "apparitions": 4,
-    "wanderers": 3,
-    "pumpkins": 8,
-    "lightning": 25,
-    "animationSpeed": 1.0
+  "schemaVersion": 2,
+  "experience": {
+    "mode": "fun",
+    "scene": "rotation",
+    "enabledScenes": ["haunted_estate", "witching_woods", "pumpkin_hollow", "midnight_mausoleum"],
+    "rotationSeconds": 90
   },
-  "art": { "palette": "moonlit", "showStatus": false },
+  "art": { "theme": "moonlit", "motion": 0.7 },
   "sound": {
     "enabled": false,
     "volume": 22,
@@ -84,4 +62,10 @@ Procedural layer switches have no effect when `source` is `media`. Custom media 
   },
   "integration": { "idleEnabled": true, "exitOnPointerMotion": true }
 }
+```
+
+Inspect the effective configuration with:
+
+```bash
+python3 scripts/omarchtober.py --check-config
 ```

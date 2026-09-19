@@ -12,10 +12,9 @@ PLUGIN_DIR = Path(__file__).resolve().parent.parent
 DEFAULTS_PATH = PLUGIN_DIR / "defaults.json"
 CONFIG_PATH = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "omarchtober" / "config.json"
 MAX_CONFIG_BYTES = 256 * 1024
-MAX_TERMINAL_COLUMNS = 500
-MAX_TERMINAL_LINES = 200
-IMPLEMENTED_SCENES = {"haunted_estate"}
-PALETTES = {"moonlit", "harvest", "spectral", "monochrome"}
+SCENES = ("haunted_estate", "witching_woods", "pumpkin_hollow", "midnight_mausoleum")
+SCENE_CHOICES = {"rotation", *SCENES}
+THEMES = {"moonlit", "harvest", "spectral", "midnight"}
 MEDIA_EXTENSIONS = {".mp3", ".mp4", ".m4a", ".ogg", ".opus", ".flac", ".wav", ".webm"}
 MAX_MEDIA_BYTES = 2 * 1024 * 1024 * 1024
 
@@ -56,34 +55,30 @@ def normalize_config(raw: Any) -> dict[str, Any]:
     base = defaults()
     incoming = raw if isinstance(raw, dict) else {}
     result = copy.deepcopy(base)
+    current_schema = incoming.get("schemaVersion") == base["schemaVersion"]
 
     experience = incoming.get("experience") if isinstance(incoming.get("experience"), dict) else {}
     mode = str(experience.get("mode", base["experience"]["mode"]))
-    scene = str(experience.get("scene", base["experience"]["scene"]))
+    scene = str(experience.get("scene", base["experience"]["scene"])) if current_schema else base["experience"]["scene"]
     result["experience"]["mode"] = mode if mode in {"fun", "scary"} else base["experience"]["mode"]
-    result["experience"]["scene"] = scene if scene in IMPLEMENTED_SCENES else base["experience"]["scene"]
-
-    elements = incoming.get("elements") if isinstance(incoming.get("elements"), dict) else {}
-    limits = {
-        "stars": (0, 160),
-        "clouds": (0, 12),
-        "bats": (0, 40),
-        "gravestones": (0, 36),
-        "apparitions": (0, 12),
-        "wanderers": (0, 10),
-        "pumpkins": (0, 24),
-        "lightning": (0, 100),
-    }
-    for key, (low, high) in limits.items():
-        result["elements"][key] = round(_number(elements.get(key), low, high, base["elements"][key]))
-    result["elements"]["animationSpeed"] = round(
-        _number(elements.get("animationSpeed"), 0.25, 2.0, base["elements"]["animationSpeed"]), 2
+    result["experience"]["scene"] = scene if scene in SCENE_CHOICES else base["experience"]["scene"]
+    enabled = experience.get("enabledScenes", base["experience"]["enabledScenes"]) if current_schema else base["experience"]["enabledScenes"]
+    selected: list[str] = []
+    if isinstance(enabled, list):
+        for value in enabled:
+            key = str(value)
+            if key in SCENES and key not in selected:
+                selected.append(key)
+    result["experience"]["enabledScenes"] = selected or list(base["experience"]["enabledScenes"])
+    rotation_value = experience.get("rotationSeconds") if current_schema else None
+    result["experience"]["rotationSeconds"] = round(
+        _number(rotation_value, 15, 900, base["experience"]["rotationSeconds"])
     )
 
     art = incoming.get("art") if isinstance(incoming.get("art"), dict) else {}
-    palette = str(art.get("palette", base["art"]["palette"]))
-    result["art"]["palette"] = palette if palette in PALETTES else base["art"]["palette"]
-    result["art"]["showStatus"] = _boolean(art.get("showStatus"), base["art"]["showStatus"])
+    theme = str(art.get("theme", base["art"]["theme"]))
+    result["art"]["theme"] = theme if theme in THEMES else base["art"]["theme"]
+    result["art"]["motion"] = round(_number(art.get("motion"), 0, 2, base["art"]["motion"]), 2)
 
     sound = incoming.get("sound") if isinstance(incoming.get("sound"), dict) else {}
     result["sound"]["enabled"] = _boolean(sound.get("enabled"), base["sound"]["enabled"])
@@ -107,13 +102,6 @@ def normalize_config(raw: Any) -> dict[str, Any]:
 
 def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
     return normalize_config(_read_json(path, {}))
-
-
-def clamp_dimensions(width: int, height: int) -> tuple[int, int]:
-    return (
-        max(40, min(MAX_TERMINAL_COLUMNS, int(width))),
-        max(16, min(MAX_TERMINAL_LINES, int(height))),
-    )
 
 
 def validate_media_path(value: str) -> tuple[Path | None, str]:

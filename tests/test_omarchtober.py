@@ -1,45 +1,66 @@
 from __future__ import annotations
 
-import copy
 import json
 import os
 import subprocess
 import sys
 import tempfile
 import unittest
+from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from omarchtober.audio import AudioEngine
-from omarchtober.config import defaults, load_config, normalize_config, validate_media_path
-from omarchtober.scenes.haunted_estate import HauntedEstateScene
-from omarchtober.terminal import DismissalInput
+from omarchtober.config import SCENES, defaults, load_config, normalize_config, validate_media_path
+
+PLAYER_SPEC = spec_from_file_location("visual_player", ROOT / "scripts" / "visual-player.py")
+assert PLAYER_SPEC and PLAYER_SPEC.loader
+visual_player = module_from_spec(PLAYER_SPEC)
+PLAYER_SPEC.loader.exec_module(visual_player)
 
 
 class ConfigurationTests(unittest.TestCase):
-    def test_public_configuration_is_clamped_and_unknown_values_are_safe(self) -> None:
+    def test_visual_configuration_is_clamped_and_unknown_values_are_safe(self) -> None:
         config = normalize_config(
             {
-                "experience": {"mode": "nightmare", "scene": "untrusted"},
-                "elements": {"stars": 9999, "clouds": -4, "bats": "17", "animationSpeed": 8},
-                "art": {"palette": "missing", "showStatus": "yes"},
+                "schemaVersion": 2,
+                "experience": {
+                    "mode": "nightmare",
+                    "scene": "untrusted",
+                    "enabledScenes": ["witching_woods", "unknown", "witching_woods"],
+                    "rotationSeconds": 9999,
+                },
+                "art": {"theme": "missing", "motion": -8},
                 "sound": {"volume": -20, "source": "network", "mediaPath": 5},
                 "integration": {"idleEnabled": "yes", "exitOnPointerMotion": False},
             }
         )
-        self.assertEqual(config["experience"], {"mode": "fun", "scene": "haunted_estate"})
-        self.assertEqual(config["elements"]["stars"], 160)
-        self.assertEqual(config["elements"]["clouds"], 0)
-        self.assertEqual(config["elements"]["bats"], 17)
-        self.assertEqual(config["elements"]["animationSpeed"], 2.0)
-        self.assertEqual(config["art"], {"palette": "moonlit", "showStatus": False})
+        self.assertEqual(config["experience"]["mode"], "fun")
+        self.assertEqual(config["experience"]["scene"], "rotation")
+        self.assertEqual(config["experience"]["enabledScenes"], ["witching_woods"])
+        self.assertEqual(config["experience"]["rotationSeconds"], 900)
+        self.assertEqual(config["art"], {"theme": "moonlit", "motion": 0})
         self.assertEqual(config["sound"]["source"], "procedural")
         self.assertEqual(config["sound"]["volume"], 0)
         self.assertEqual(config["sound"]["mediaPath"], "")
         self.assertTrue(config["integration"]["idleEnabled"])
         self.assertFalse(config["integration"]["exitOnPointerMotion"])
+
+    def test_version_one_configuration_migrates_to_full_collection(self) -> None:
+        migrated = normalize_config(
+            {
+                "schemaVersion": 1,
+                "experience": {"mode": "scary", "scene": "haunted_estate"},
+                "art": {"palette": "harvest"},
+            }
+        )
+        self.assertEqual(migrated["schemaVersion"], 2)
+        self.assertEqual(migrated["experience"]["mode"], "scary")
+        self.assertEqual(migrated["experience"]["scene"], "rotation")
+        self.assertEqual(migrated["experience"]["enabledScenes"], list(SCENES))
+        self.assertEqual(migrated["art"]["theme"], "moonlit")
 
     def test_oversized_or_malformed_file_uses_packaged_defaults(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -50,63 +71,50 @@ class ConfigurationTests(unittest.TestCase):
             self.assertEqual(load_config(path), defaults())
 
 
-class SceneBehaviorTests(unittest.TestCase):
-    def config(self, mode: str = "fun") -> dict[str, object]:
+class VisualCollectionTests(unittest.TestCase):
+    def test_every_public_scene_has_a_bundled_visual_asset(self) -> None:
         config = defaults()
-        config["experience"]["mode"] = mode
-        config["elements"].update(
-            {"stars": 0, "clouds": 0, "bats": 0, "gravestones": 0, "apparitions": 1, "wanderers": 0, "pumpkins": 0, "lightning": 0}
+        paths = visual_player.scene_paths(config)
+        self.assertEqual(len(paths), len(SCENES))
+        self.assertEqual({path.stem.replace("-", "_") for path in paths}, set(SCENES))
+        for path in paths:
+            self.assertTrue(path.is_file())
+            self.assertGreater(path.stat().st_size, 100_000)
+
+    def test_single_scene_selection_does_not_rotate(self) -> None:
+        config = defaults()
+        config["experience"]["scene"] = "pumpkin_hollow"
+        paths = visual_player.scene_paths(config)
+        self.assertEqual([path.name for path in paths], ["pumpkin-hollow.webp"])
+
+    def test_session_handoff_exposes_private_normalized_payload(self) -> None:
+        config = normalize_config(
+            {
+                "schemaVersion": 2,
+                "experience": {"scene": "witching_woods", "rotationSeconds": 4000},
+                "art": {"theme": "spectral", "motion": 9},
+                "integration": {"exitOnPointerMotion": False},
+            }
         )
-        return config
-
-    def test_fun_mode_replaces_undead_with_friendly_figures(self) -> None:
-        fun = HauntedEstateScene(120, 36, self.config("fun"), seed=4)
-        scary = HauntedEstateScene(120, 36, self.config("scary"), seed=4)
-        fun.apparitions[0].x = scary.apparitions[0].x = 0.05
-        fun.apparitions[0].phase = scary.apparitions[0].phase = 0.0
-        fun.elapsed = scary.elapsed = 1.5
-        fun_frame = fun.render().plain()
-        scary_frame = scary.render().plain()
-        self.assertIn("(o o)", fun_frame)
-        self.assertNotIn("/x x\\", fun_frame)
-        self.assertIn("/x x\\", scary_frame)
-        self.assertNotIn("(o o)", scary_frame)
-
-    def test_configured_populations_are_exact(self) -> None:
-        config = self.config()
-        config["elements"].update({"stars": 17, "clouds": 3, "bats": 9, "gravestones": 11, "apparitions": 5, "wanderers": 4, "pumpkins": 7})
-        scene = HauntedEstateScene(120, 36, config, seed=9)
-        self.assertEqual(
-            [len(scene.stars), len(scene.clouds), len(scene.bats), len(scene.graves), len(scene.apparitions), len(scene.wanderers), len(scene.pumpkins)],
-            [17, 3, 9, 11, 5, 4, 7],
-        )
-
-    def test_large_displays_gain_detail_without_extra_creatures(self) -> None:
-        config = self.config()
-        config["elements"]["apparitions"] = 0
-        compact = HauntedEstateScene(70, 22, copy.deepcopy(config), seed=2)
-        cinematic = HauntedEstateScene(150, 42, copy.deepcopy(config), seed=2)
-        panoramic = HauntedEstateScene(200, 52, copy.deepcopy(config), seed=2)
-        compact_frame = compact.render().plain()
-        cinematic_frame = cinematic.render().plain()
-        panoramic_frame = panoramic.render().plain()
-        self.assertEqual((compact.detail_tier, cinematic.detail_tier, panoramic.detail_tier), ("compact", "cinematic", "panoramic"))
-        self.assertNotIn("╫", compact_frame)
-        self.assertIn("╫", cinematic_frame)
-        self.assertNotIn("⠿", compact_frame)
-        self.assertIn("⠿", panoramic_frame)
-        structural = set("_/\\|[]─│┌┐└┘├┤┬┴┼╭╮╰╯╱╲")
-        compact_detail = sum(character in structural for character in compact_frame)
-        panoramic_detail = sum(character in structural for character in panoramic_frame)
-        self.assertGreater(panoramic_detail, compact_detail * 1.5)
-        self.assertEqual(len(compact.bats), len(panoramic.bats))
-
-    def test_snapshot_is_deterministic_for_seed_and_time(self) -> None:
-        left = HauntedEstateScene(100, 30, self.config(), seed=21)
-        right = HauntedEstateScene(100, 30, self.config(), seed=21)
-        left.update(3.25)
-        right.update(3.25)
-        self.assertEqual(left.render().plain(), right.render().plain())
+        paths = visual_player.scene_paths(config)
+        with tempfile.TemporaryDirectory() as directory:
+            previous = os.environ.get("XDG_RUNTIME_DIR")
+            os.environ["XDG_RUNTIME_DIR"] = directory
+            try:
+                session = visual_player.write_session(config, paths)
+            finally:
+                if previous is None:
+                    del os.environ["XDG_RUNTIME_DIR"]
+                else:
+                    os.environ["XDG_RUNTIME_DIR"] = previous
+            payload = json.loads(session.read_text(encoding="utf-8"))
+            self.assertEqual(session.stat().st_mode & 0o777, 0o600)
+            self.assertEqual(list(session.parent.glob("*")), [session])
+        self.assertEqual(payload["scenes"], [str(paths[0])])
+        self.assertEqual(payload["duration"], 900)
+        self.assertEqual(payload["theme"], "spectral")
+        self.assertEqual(payload["motion"], 2.0)
+        self.assertFalse(payload["exitOnMotion"])
 
 
 class MediaAndAudioTests(unittest.TestCase):
@@ -136,21 +144,6 @@ class MediaAndAudioTests(unittest.TestCase):
         self.assertIn("--raw", command)
         self.assertEqual(command[command.index("--format") + 1], "s16")
         self.assertEqual(command[command.index("--channels") + 1], "2")
-
-
-class DismissalInputTests(unittest.TestCase):
-    def test_pointer_motion_follows_setting_but_clicks_always_dismiss(self) -> None:
-        motion = b"\x1b[<35;15;8M"
-        click = b"\x1b[<0;15;8M"
-        self.assertTrue(DismissalInput(True).feed(motion, now=1.0))
-        self.assertFalse(DismissalInput(False).feed(motion, now=1.0))
-        self.assertTrue(DismissalInput(False).feed(click, now=1.0))
-
-    def test_fragmented_mouse_report_waits_for_completion(self) -> None:
-        decoder = DismissalInput(False)
-        self.assertFalse(decoder.feed(b"\x1b[<35;", now=1.0))
-        self.assertFalse(decoder.feed(b"12;8M", now=1.01))
-        self.assertFalse(decoder.expired(now=1.02))
 
 
 class IdleIntegrationTests(unittest.TestCase):

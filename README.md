@@ -4,26 +4,33 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-ef813c?style=flat-square)](LICENSE)
 [![Omarchy Quattro](https://img.shields.io/badge/Omarchy-Quattro-c4a3d2?style=flat-square)](https://omarchy.org/)
 
-An original, terminal-native Halloween nightscape for Omarchy. Omarchtober turns every monitor into a moonlit Victorian estate with configurable clouds, stars, bats, graves, pumpkins, emerging figures, and wandering visitors.
+A living collection of illustrated Halloween nights for Omarchy. Omarchtober fills every monitor with authored, high-resolution dioramas inspired by ANSI engraving, Braille dithering, moonlit pixel art, and antique storybook plates.
 
-**[Website](https://daileng.github.io/omarchtober/)** · **[Scene authoring](docs/SCENE_AUTHORING.md)** · **[Roadmap](ROADMAP.md)** · **[Configuration](docs/CONFIGURATION.md)**
+**[Website](https://daileng.github.io/omarchtober/)** · **[Scene authoring](docs/SCENE_AUTHORING.md)** · **[Architecture](docs/ARCHITECTURE.md)** · **[Configuration](docs/CONFIGURATION.md)**
 
 <p align="center">
-  <img src="preview.png" alt="Omarchtober moonlit haunted estate" width="100%" />
+  <img src="preview.png" alt="Four Omarchtober illustrated scenes" width="100%" />
 </p>
 
-## Why Omarchtober
+## The collection
 
-- **One safe mode switch** — Fun mode replaces undead figures and blood accents with friendly ghosts, costumed walkers, colored lights, gentler thunder, and owl-like calls.
-- **An ANSI diorama flagship** — connected Unicode architecture, Braille-textured roofs and forest, layered fog, a full moon, animated windows, bats, gravestones, pumpkins, and wandering visitors.
-- **Adaptive composition** — Compact and Standard stay deliberately simple; Cinematic and Panoramic introduce the detailed manor, atmospheric depth, framing branches, and foreground architecture.
-- **Exact population controls** — user-configured counts remain authoritative at every detail tier.
-- **Four palettes** — Moonlit, Harvest, Spectral, and Monochrome.
-- **Optional audio** — locally synthesized wind, thunder, and nocturnal calls, or a user-selected MP3/MP4/audio file through `mpv`.
-- **Omarchy-native lifecycle** — tray control, fullscreen terminals on every monitor, inhibitor-aware idle timing, and unchanged lock behavior.
-- **Scene platform** — a documented registry and AI-agent prompt for adding original scenes without changing shell integration.
+- **Haunted Estate** — a Victorian manor, graveyard, old trees, cats, and lantern-bearing visitors.
+- **Witching Woods** — an ancient path, stone well, crooked cottage, mushrooms, owls, and drifting mist.
+- **Pumpkin Hollow** — a warm harvest village with a clock tower, pumpkin fields, cottages, and costumed visitors.
+- **Midnight Mausoleum** — a cypress-lined cemetery avenue with reflecting pools, statues, fog, and an ornate chapel.
 
-No Python packages, remote runtime assets, privileged writes, or copied movie characters.
+Every scene shares one visual language: midnight navy, ivory moonlight, lavender engraving, warm amber lamps, dense stippling, and layered theatrical depth.
+
+## Features
+
+- GPU-rendered 16:9 artwork with cover-cropped multi-monitor presentation.
+- Full-collection rotation or a fixed favorite scene.
+- Moonlit, Harvest, Spectral, and Midnight color treatments.
+- Slow breathing scale, crossfades, drifting fog, and restrained lightning.
+- Configurable motion and scene duration.
+- Optional locally synthesized ambience or user-selected local media.
+- Tray control, idle integration, pointer/key dismissal, and unchanged Omarchy lock ownership.
+- Runtime network-free, unprivileged, and dependency-free at the Python package level.
 
 ## Install
 
@@ -31,27 +38,15 @@ No Python packages, remote runtime assets, privileged writes, or copied movie ch
 omarchy plugin add https://github.com/DailenG/omarchtober --enable
 ```
 
-The pumpkin icon appears in the system tray. Click it for Nightscape Control, middle-click to begin immediately, or right-click for the action menu.
-
-## Use
-
-| Action | Result |
-|---|---|
-| Click tray icon | Open Nightscape Control |
-| Middle-click tray icon | Begin the configured nightscape |
-| **FUN** | Enforce the family-friendly visual and audio treatment |
-| **SCARY** | Enable undead figures, darker audio, and blood accents |
-| **Begin Night** | Save settings and open one scene on every monitor |
-| Any key or click | Return to the desktop |
-| Pointer movement | Return when the setting is enabled |
-
-Shell IPC:
+The pumpkin icon appears in the system tray. Click it to open the Visual Collection, middle-click to start, or use:
 
 ```bash
 omarchy-shell omarchtober configure
 omarchy-shell omarchtober start
 omarchy-shell omarchtober stop
 ```
+
+Any key or click returns to the desktop. Pointer motion also dismisses when enabled.
 
 ## Configuration
 
@@ -61,49 +56,25 @@ Settings are written atomically to:
 ~/.config/omarchtober/config.json
 ```
 
-The control room exposes mode, scene, exact element populations, lightning, animation speed, palette, audio source, audio layers, idle integration, and pointer dismissal. See [Configuration](docs/CONFIGURATION.md) for limits and semantics.
+The control room selects the scene or complete rotation, theme, motion intensity, scene duration, ambience, idle launch, and dismissal behavior. Version-one terminal configurations migrate safely to the complete visual collection.
 
-### Deterministic preview
-
-No fullscreen window is needed:
+Diagnostics:
 
 ```bash
-python3 scripts/omarchtober.py --snapshot --width 120 --height 36 --seed 7
-python3 scripts/omarchtober.py --snapshot --width 200 --height 52 --seed 7
 python3 scripts/omarchtober.py --check-config
 python3 scripts/omarchtober.py --list-scenes
-```
-
-## Audio
-
-Audio is disabled by default. Procedural mode generates wind, sparse thunder, and nocturnal calls locally and streams raw stereo PCM to PipeWire. Fun mode softens thunder and raises creature-call pitch. Custom Media mode loops a local allowlisted audio or video file through `mpv`; video is never displayed.
-
-One process acquires a private no-follow lock, so multi-monitor sessions produce one audio stream. Test the selected source with:
-
-```bash
 python3 scripts/omarchtober.py --audio-test 8
 ```
 
-No audio download or license decision is required. Users who want a recording select their own local MP3, MP4, M4A, OGG, OPUS, FLAC, WAV, or WEBM file.
+## Runtime
 
-## Adaptive detail
+`qml6` presents the scene assets through Qt Quick. Two image planes crossfade without reconstructing the artwork, while low-opacity fog, slow scale motion, theme overlays, and lightning add life without obscuring the authored composition. The launcher opens one fullscreen player on each monitor and preserves Omarchy's existing idle and lock lifecycle.
 
-The renderer derives detail from terminal cell dimensions:
-
-| Tier | Minimum | Added composition |
-|---|---:|---|
-| Compact | below 75×25 | Essential silhouette and animation |
-| Standard | 75×25 | Full estate and graveyard |
-| Cinematic | 135×38 | Procedural ANSI manor, Braille texture, animated windows, iron fencing |
-| Panoramic | 190×48 | Layered forest and fog, framing branches, foreground steps, wide staging |
-
-Configured stars, bats, graves, figures, walkers, clouds, and pumpkins never increase automatically.
+No runtime image generation, downloads, browser engine, remote assets, or privileged writes.
 
 ## Create a scene
 
-Read [Scene Authoring](docs/SCENE_AUTHORING.md). It defines the scene interface, fun/scary safety contract, deterministic checks, resource ceilings, registry steps, and a copy-ready prompt for an Omarchy AI agent. `AGENTS.md` repeats the repository invariants for agents operating inside the checkout.
-
-Scenes must use original archetypes rather than copyrighted movie characters, names, masks, houses, or music.
+Read [Scene Authoring](docs/SCENE_AUTHORING.md). New work must be an original 16:9 companion plate, visually coherent with the collection, safe in Fun mode, free of copied characters and architecture, and bundled locally as a compressed WebP asset.
 
 ## Development
 
@@ -111,13 +82,14 @@ Scenes must use original archetypes rather than copyrighted movie characters, na
 git clone https://github.com/DailenG/omarchtober
 cd omarchtober
 python3 -m unittest discover -s tests -v
-python3 -m py_compile omarchtober/*.py omarchtober/scenes/*.py scripts/omarchtober.py
+python3 -m py_compile omarchtober/*.py scripts/omarchtober.py scripts/visual-player.py
 bash -n scripts/launch-omarchtober scripts/idle-integration scripts/select-media
 omarchy plugin validate .
+/usr/lib/qt6/bin/qmllint visual/Screensaver.qml
 /usr/lib/qt6/bin/qmllint -I "$OMARCHY_PATH/shell" Service.qml Config.qml
 ```
 
-Live setup and pull-request expectations are in [CONTRIBUTING.md](CONTRIBUTING.md). Architecture and trust boundaries are in [Architecture](docs/ARCHITECTURE.md) and [Security](SECURITY.md).
+Live setup and pull-request expectations are in [CONTRIBUTING.md](CONTRIBUTING.md). Trust boundaries are documented in [Security](SECURITY.md).
 
 ## License
 

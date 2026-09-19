@@ -2,36 +2,29 @@
   {
     "key": "haunted_estate",
     "name": "Haunted Estate",
-    "description": "Moonlit Victorian manor, graveyard, bats, pumpkins, and wandering visitors.",
+    "description": "A moonlit Victorian manor framed by graves, old trees, cats, and lantern-bearing visitors.",
     "status": "available",
     "priority": 1
   },
   {
     "key": "witching_woods",
     "name": "Witching Woods",
-    "description": "Crooked forest paths, a cauldron clearing, owls, and lantern-bearing travelers.",
-    "status": "planned",
+    "description": "An ancient forest path winding past a stone well toward an amber-lit cottage.",
+    "status": "available",
     "priority": 2
   },
   {
     "key": "pumpkin_hollow",
     "name": "Pumpkin Hollow",
-    "description": "A playful harvest village built for the gentlest Halloween setting.",
-    "status": "planned",
+    "description": "A harvest village of crooked cottages, pumpkin fields, lanterns, and a central clock tower.",
+    "status": "available",
     "priority": 3
   },
   {
-    "key": "gothic_manor",
-    "name": "Gothic Manor",
-    "description": "A close facade view with animated windows, webs, portraits, and hidden silhouettes.",
-    "status": "planned",
+    "key": "midnight_mausoleum",
+    "name": "Midnight Mausoleum",
+    "description": "A cypress-lined cemetery avenue with reflecting pools, statues, mist, and an ornate mausoleum.",
+    "status": "available",
     "priority": 4
-  },
-  {
-    "key": "cemetery_gate",
-    "name": "Cemetery Gate",
-    "description": "Iron gates, rolling fog, mausoleums, ravens, and a distant chapel.",
-    "status": "planned",
-    "priority": 5
   }
 ]

@@ -1,5 +1,5 @@
 name: Scene proposal
-description: Propose an original Fun/Scary scene
+description: Propose an original illustrated scene plate
 labels: [scene]
 body:
   - type: input
@@ -11,26 +11,26 @@ body:
   - type: textarea
     id: concept
     attributes:
-      label: Composition and motion
-      description: Describe location, layers, focal point, and animated elements without referencing protected film properties.
+      label: Composition and depth layers
+      description: Describe location, focal structure, foreground framing, horizon, and sky without referencing protected film properties.
     validations:
       required: true
   - type: textarea
-    id: fun
+    id: safety
     attributes:
-      label: Fun treatment
-      description: Explain child-friendly figures, props, timing, and audio.
+      label: Content safety
+      description: Confirm the plate stays family-safe; no blood, remains, zombies, threatening faces, weapons, or pursuit.
     validations:
       required: true
   - type: textarea
-    id: scary
+    id: palette
     attributes:
-      label: Scary treatment
-      description: Optional restrained original replacements.
-  - type: textarea
-    id: tiers
-    attributes:
-      label: Adaptive detail
-      description: What should Compact, Standard, Cinematic, and Panoramic layouts add?
+      label: Collection fit
+      description: How does it match midnight navy, ivory moonlight, lavender etching, amber lamps, and dense stippling?
     validations:
       required: true
+  - type: textarea
+    id: ambience
+    attributes:
+      label: Ambience
+      description: Optional notes on the audio mood that suits the plate.

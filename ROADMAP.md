@@ -1,31 +1,33 @@
 # Omarchtober Roadmap
 
-The renderer and settings contract are scene-first. Each release should add one complete, original scene rather than partially building several.
+Omarchtober is an authored visual collection. Each release should add one complete, coherent scene plate rather than partially building several.
 
-## Priority order
+## Shipped
 
-1. **Haunted Estate** — available in 0.1. Moonlit Victorian exterior, graveyard, pumpkins, bats, emergers, walkers, and four adaptive detail tiers.
-2. **Witching Woods** — crooked forest path, cauldron clearing, ravens, owls, lanterns, and a witch silhouette. Broad appeal and a composition distinct from the estate.
-3. **Pumpkin Hollow** — harvest village, hay wagons, corn maze, candy trail, and smiling jack-o'-lanterns. Designed as the strongest Fun-mode scene.
-4. **Gothic Manor** — close facade view with many windows, webs, moving curtains, portraits, and hidden silhouettes. Scary mode may add original blood and apparition treatments.
-5. **Cemetery Gate** — iron gates, rolling fog, mausoleums, ravens, grave risers, and a distant chapel.
-6. **Midnight Carnival** — abandoned midway, carousel silhouettes, flickering bulbs, tents, and original masked performers; no references to identifiable film properties.
-7. **Harvest Farm** — cornfield, barn, scarecrows, windmill, and distant storm. Fun mode emphasizes a festival; Scary mode emphasizes moving scarecrows.
+1. **Haunted Estate** — Victorian manor, graveyard, old trees, cats, lantern-bearing visitors.
+2. **Witching Woods** — ancient path, stone well, crooked cottage, mushrooms, owls, drifting mist.
+3. **Pumpkin Hollow** — harvest village, clock tower, pumpkin fields, costumed visitors.
+4. **Midnight Mausoleum** — cypress avenue, reflecting pools, statues, fog, ornate chapel.
 
-## Release gates for every scene
+## Next plates
 
-- Complete Fun and Scary treatments; Fun contains no blood, exposed remains, zombies, threatening faces, or jump-scare timing.
-- Compact, Standard, Cinematic, and Panoramic compositions.
-- Deterministic snapshot at a fixed seed and time.
-- Exact configured populations and bounded per-frame work.
-- No new runtime dependency without explicit review.
-- Original artwork, audio synthesis, names, and archetypes.
-- Configuration, website, screenshots, and scene-authoring documentation updated in the same change.
+5. **Cemetery Gate** — iron gates, mausoleums, ravens, and a distant chapel on the hill.
+6. **Midnight Carnival** — abandoned midway, carousel silhouettes, flickering bulbs, original masked performers.
+7. **Harvest Farm** — cornfield, barn, scarecrows, windmill, and a distant storm front.
+8. **Coastal Lighthouse** — cliff path, wrecked hull, beam sweeping fog, and a keeper's cottage.
+
+## Release gates for every plate
+
+- Matches the collection's authored style: midnight navy, ivory moonlight, lavender etching, amber lamps, dense stippling, four depth layers.
+- Family-safe in both modes; no blood, remains, zombies, threatening faces, or startle framing.
+- 2560×1440 WebP under 5 MiB, committed locally, no runtime generation or download.
+- Readable when cover-cropped to 16:10 and 21:9.
+- Catalog, settings, documentation, website, and preview updated in the same change.
 
 ## Platform backlog
 
-- Per-scene presets that do not weaken the global Fun-mode safety override.
-- Scene rotation with deterministic minimum durations.
-- Reduced-motion treatment separate from population and content mode.
-- Optional palette import using local files only.
-- Renderer-backend research for a future GPU edition. This remains separate unless it can preserve the scene contract without adding dependencies to the terminal plugin.
+- Per-scene ambience pairing that cannot weaken Fun-mode safety.
+- Reduced-motion profile separate from the motion multiplier.
+- Optional user scene directory restricted to local, validated image files.
+- Time-of-night scheduling that selects plates by clock hour.
+- Optional parallax depth using authored layer exports rather than runtime segmentation.

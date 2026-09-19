@@ -111,11 +111,11 @@ Item {
 
   Platform.SystemTrayIcon {
     visible: true
-    tooltip: "Omarchtober · click to configure · middle-click to haunt"
+    tooltip: "Omarchtober · illustrated nights · click to configure"
     icon.source: Qt.resolvedUrl("assets/tray.svg")
     menu: Platform.Menu {
-      Platform.MenuItem { text: "Open Nightscape Control"; onTriggered: root.openControlRoom() }
-      Platform.MenuItem { text: "Haunt Now"; onTriggered: root.launch("force") }
+      Platform.MenuItem { text: "Open Visual Collection"; onTriggered: root.openControlRoom() }
+      Platform.MenuItem { text: "Start Illustrated Night"; onTriggered: root.launch("force") }
       Platform.MenuItem { text: "Return to Desktop"; onTriggered: root.stop() }
       Platform.MenuSeparator { }
       Platform.MenuItem { text: "Report Bug"; onTriggered: Qt.openUrlExternally("https://github.com/DailenG/omarchtober/issues") }

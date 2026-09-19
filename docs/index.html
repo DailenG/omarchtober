@@ -3,58 +3,58 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Omarchtober is an original terminal-native Halloween nightscape for Omarchy with Fun and Scary modes.">
-  <title>Omarchtober — Halloween for Omarchy</title>
+  <meta name="description" content="Omarchtober is a collection of original illustrated Halloween nights for Omarchy, presented fullscreen on every monitor.">
+  <title>Omarchtober — Illustrated Halloween nights for Omarchy</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="nav wrap">
     <a class="brand" href="#top" aria-label="Omarchtober home"><span class="mark">☾</span> OMARCHTOBER</a>
-    <nav aria-label="Primary"><a href="#experience">Experience</a><a href="#scenes">Scenes</a><a href="#create">Create</a><a class="pill" href="https://github.com/DailenG/omarchtober">GitHub</a></nav>
+    <nav aria-label="Primary"><a href="#collection">Collection</a><a href="#experience">Experience</a><a href="#create">Create</a><a class="pill" href="https://github.com/DailenG/omarchtober">GitHub</a></nav>
   </header>
 
   <main id="top">
     <section class="hero wrap">
       <div class="hero-copy">
-        <p class="eyebrow">A living Halloween nightscape for Omarchy</p>
-        <h1>The estate wakes<br><em>after dark.</em></h1>
-        <p class="lede">A full moon. A procedural ANSI Victorian manor. Braille fog, pumpkins, graves, bats, and visitors who change when the kids are watching.</p>
-        <div class="actions"><a class="button primary" href="https://github.com/DailenG/omarchtober#install">Install Omarchtober</a><a class="button secondary" href="SCENE_AUTHORING.md">Build a scene</a></div>
+        <p class="eyebrow">A collection of illustrated Halloween nights</p>
+        <h1>Four nights.<br><em>Every monitor.</em></h1>
+        <p class="lede">Hand-authored moonlit dioramas — manor, forest, harvest village, and mausoleum — rendered fullscreen with slow breathing motion, drifting fog, and restrained lightning.</p>
+        <div class="actions"><a class="button primary" href="https://github.com/DailenG/omarchtober#install">Install Omarchtober</a><a class="button secondary" href="SCENE_AUTHORING.md">Add a scene</a></div>
         <code>omarchy plugin add https://github.com/DailenG/omarchtober --enable</code>
       </div>
-      <div class="hero-art"><img src="preview.webp" alt="ANSI diorama of a moonlit Victorian estate with bats, pumpkins, graves, and friendly ghosts"><span class="mode-tag">FUN ↔ SCARY</span></div>
+      <div class="hero-art"><img src="preview.webp" alt="Four illustrated Omarchtober scenes: haunted estate, witching woods, pumpkin hollow, midnight mausoleum"><span class="mode-tag">MOONLIT ↔ HARVEST</span></div>
     </section>
 
-    <section class="ticker" aria-label="Features"><div>FULL MOON <i>✦</i> ADAPTIVE DETAIL <i>✦</i> PROCEDURAL AUDIO <i>✦</i> EXACT POPULATIONS <i>✦</i> MULTI-MONITOR <i>✦</i> NO REMOTE ASSETS</div></section>
+    <section class="ticker" aria-label="Features"><div>AUTHORED ART <i>✦</i> FULL COLLECTION ROTATION <i>✦</i> FOUR THEMES <i>✦</i> GPU PRESENTATION <i>✦</i> MULTI-MONITOR <i>✦</i> NO REMOTE ASSETS</div></section>
+
+    <section id="collection" class="section wrap">
+      <div class="section-head"><p class="eyebrow">The collection</p><h2>One visual language.<br>Four destinations.</h2></div>
+      <div class="scene-grid">
+        <article class="scene featured"><small>AVAILABLE</small><h3>Haunted Estate</h3><p>A Victorian manor above a graveyard, framed by old trees, cats, bats, and lantern-bearing visitors.</p></article>
+        <article class="scene"><small>AVAILABLE</small><h3>Witching Woods</h3><p>An ancient forest path past a stone well toward an amber-lit crooked cottage.</p></article>
+        <article class="scene"><small>AVAILABLE</small><h3>Pumpkin Hollow</h3><p>A warm harvest village with a clock tower, pumpkin fields, and costumed visitors.</p></article>
+        <article class="scene"><small>AVAILABLE</small><h3>Midnight Mausoleum</h3><p>A cypress avenue with reflecting pools, statues, fog, and an ornate chapel.</p></article>
+      </div>
+    </section>
 
     <section id="experience" class="section wrap">
-      <div class="section-head"><p class="eyebrow">One switch. A different night.</p><h2>Halloween without<br>the settings hunt.</h2></div>
+      <div class="section-head"><p class="eyebrow">Presentation, not generation</p><h2>Art stays authored.<br>The night moves.</h2></div>
       <div class="mode-grid">
-        <article class="mode fun"><span>01 / FUN</span><h3>All atmosphere.<br>No nightmares.</h3><p>Friendly ghosts, costumed walkers, colored lights, smiling pumpkins, gentle thunder, and soft owl calls. No blood, skeletons, zombies, threatening faces, or jump scares.</p></article>
-        <article class="mode scary"><span>02 / SCARY</span><h3>The grounds<br>do not stay quiet.</h3><p>Grave risers, restless undead silhouettes, darker calls, deep thunder, and restrained blood accents bring the same estate into a more unsettling register.</p></article>
+        <article class="mode fun"><span>01 / MOTION</span><h3>Alive without<br>the distraction.</h3><p>Slow breathing scale, independent fog bands, long crossfades between scenes, and rare lightning. One slider takes it from frozen to theatrical.</p></article>
+        <article class="mode scary"><span>02 / THEMES</span><h3>The same night,<br>four moods.</h3><p>Moonlit, Harvest, Spectral, and Midnight recolor the whole collection through the stage, never by rewriting the bundled plates.</p></article>
       </div>
     </section>
 
     <section class="night-band">
       <div class="wrap detail-layout">
-        <div><p class="eyebrow">Resolution-aware composition</p><h2>More screen.<br>More estate.</h2><p>The renderer adds connected architecture, Braille texture, forest depth, fog, and foreground framing. Exact creature counts remain yours.</p></div>
-        <ol class="tiers"><li><b>Compact</b><span>Essential silhouette</span></li><li><b>Standard</b><span>Full grounds</span></li><li><b>Cinematic</b><span>ANSI manor and iron fence</span></li><li><b>Panoramic</b><span>Forest, fog, branches, steps</span></li></ol>
-      </div>
-    </section>
-
-    <section id="scenes" class="section wrap">
-      <div class="section-head"><p class="eyebrow">Scene platform</p><h2>One complete world.<br>More on the road.</h2></div>
-      <div class="scene-grid">
-        <article class="scene featured"><small>AVAILABLE NOW</small><h3>Haunted Estate</h3><p>Procedural ANSI Victorian architecture, Braille-textured atmosphere, graveyard, pumpkins, moving clouds, stars, bats, emergers, and walkers.</p></article>
-        <article class="scene"><small>NEXT</small><h3>Witching Woods</h3><p>Crooked paths, cauldron clearing, ravens, owls, lanterns, and a distant cabin.</p></article>
-        <article class="scene"><small>PLANNED</small><h3>Pumpkin Hollow</h3><p>A gentle harvest village designed to make Fun mode the main event.</p></article>
-        <article class="scene"><small>PLANNED</small><h3>Gothic Manor</h3><p>Close facade, animated windows, webs, moving curtains, and hidden silhouettes.</p></article>
+        <div><p class="eyebrow">Omarchy-native</p><h2>Tray, idle,<br>and every display.</h2><p>One fullscreen player per monitor, cover-cropped to any aspect ratio. Omarchy keeps lock ownership; any key, click, or pointer motion returns you to the desktop.</p></div>
+        <ol class="tiers"><li><b>Tray</b><span>Visual Collection control</span></li><li><b>Idle</b><span>Follows Omarchy timing</span></li><li><b>Rotation</b><span>15 to 900 seconds</span></li><li><b>Audio</b><span>Optional local ambience</span></li></ol>
       </div>
     </section>
 
     <section id="create" class="create wrap">
-      <div><p class="eyebrow">Designed for contributors and agents</p><h2>Imagine a night.<br>Ship a scene.</h2></div>
-      <div><p>The scene contract covers deterministic rendering, safety modes, adaptive layouts, resource bounds, tests, registration, and documentation. A copy-ready prompt lets an Omarchy AI agent implement an original scene without inventing parallel infrastructure.</p><a class="button primary" href="SCENE_AUTHORING.md">Read the scene guide</a></div>
+      <div><p class="eyebrow">Designed for contributors and agents</p><h2>Paint a night.<br>Ship a plate.</h2></div>
+      <div><p>The scene contract covers composition, palette, texture, depth layers, content safety, asset format, catalog registration, and acceptance checks. A copy-ready prompt lets an AI agent add an original plate without inventing parallel infrastructure.</p><a class="button primary" href="SCENE_AUTHORING.md">Read the scene guide</a></div>
     </section>
   </main>
 

@@ -2,18 +2,18 @@
 
 Describe the observable behavior and design decision.
 
-## Mode safety
+## Content safety
 
-- [ ] Fun mode remains free of blood, remains, zombies, threatening skeletons, menacing faces, weapons, pursuit, and jump scares.
-- [ ] Scary content, if any, is original and not identifiable with a film property.
+- [ ] Bundled art and audio remain free of blood, remains, zombies, threatening faces, weapons, pursuit, and startle framing.
+- [ ] Art is original and not identifiable with a film property.
 
 ## Evidence
 
-Include deterministic snapshots or visual captures and exact verification output.
+Include screenshots or captures of the fullscreen player and exact verification output.
 
 ## Checklist
 
-- [ ] Configured populations remain exact across detail tiers.
+- [ ] Scene assets stay bundled locally; no runtime generation or download.
 - [ ] Runtime remains network-free and unprivileged.
 - [ ] Tests assert behavior rather than implementation.
 - [ ] User, scene-authoring, and website documentation are current.

@@ -31,12 +31,11 @@ jobs:
       - name: Run behavioral tests
         run: python -m unittest discover -s tests -v
       - name: Compile Python
-        run: python -m py_compile omarchtober/*.py omarchtober/scenes/*.py scripts/omarchtober.py
-      - name: Exercise adaptive snapshots
+        run: python -m py_compile omarchtober/*.py scripts/omarchtober.py scripts/visual-player.py
+      - name: Exercise diagnostics
         run: |
-          python scripts/omarchtober.py --snapshot --width 120 --height 36 --seed 7 > /tmp/standard.txt
-          python scripts/omarchtober.py --snapshot --width 200 --height 52 --seed 7 > /tmp/panoramic.txt
           python scripts/omarchtober.py --check-config > /tmp/config.json
+          python scripts/omarchtober.py --list-scenes > /tmp/scenes.txt
       - name: Validate shell syntax
         run: bash -n scripts/launch-omarchtober scripts/idle-integration scripts/select-media
 
