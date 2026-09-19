@@ -21,7 +21,7 @@ Omarchtober is an authored visual collection. Each release should add one comple
 - Matches the collection's authored style: midnight navy, ivory moonlight, lavender etching, amber lamps, dense stippling, four depth layers.
 - Family-safe in both modes; no blood, remains, zombies, threatening faces, or startle framing.
 - 2560×1440 WebP under 5 MiB, committed locally, no runtime generation or download.
-- Readable when cover-cropped to 16:10 and 21:9.
+- Readable in full-frame `PreserveAspectFit` presentation at 16:9, 16:10, and 21:9.
 - Catalog, settings, documentation, website, and preview updated in the same change.
 
 ## Platform backlog

@@ -16,6 +16,10 @@ Window {
   property bool frontIsA: true
   property bool armed: false
   property real motion: Number(options.motion || 1.0)
+  property real mist: 0.7
+  property real flight: 0.6
+  property real lanterns: 0.65
+  property real lightningLevel: 0.35
   property int transitionMs: 2800
 
   function sessionCandidates() {
@@ -58,6 +62,18 @@ Window {
     scenePaths = files
     var requested = Number(options.motion)
     motion = isFinite(requested) ? Math.max(0, Math.min(2, requested)) : 0.7
+    var effects = options.effects && typeof options.effects === "object" ? options.effects : ({})
+    var effectNames = ["mist", "flight", "lanterns", "lightning"]
+    var effectDefaults = [0.7, 0.6, 0.65, 0.35]
+    var effectValues = []
+    for (var j = 0; j < effectNames.length; j++) {
+      var level = Number(effects[effectNames[j]])
+      effectValues.push(isFinite(level) ? Math.max(0, Math.min(2, level)) : effectDefaults[j])
+    }
+    mist = effectValues[0]
+    flight = effectValues[1]
+    lanterns = effectValues[2]
+    lightningLevel = effectValues[3]
     if (scenePaths.length > 0) {
       imageA.item.source = "file://" + scenePaths[0]
       imageA.opacity = 1
@@ -100,26 +116,23 @@ Window {
     return String(options.theme || "moonlit") === "moonlit" ? 0 : 0.13
   }
 
+  Rectangle {
+    anchors.fill: parent
+    color: "#060715"
+  }
+
   Component {
     id: sceneImage
     Image {
-      anchors.centerIn: parent
-      width: parent.width * 1.035
-      height: parent.height * 1.035
-      fillMode: Image.PreserveAspectCrop
+      anchors.fill: parent
+      fillMode: Image.PreserveAspectFit
       asynchronous: true
       cache: true
       smooth: true
       mipmap: true
-      sourceSize.width: Math.min(3840, root.width * 1.08)
-      sourceSize.height: Math.min(2160, root.height * 1.08)
+      sourceSize.width: Math.min(3840, root.width)
+      sourceSize.height: Math.min(2160, root.height)
       Behavior on opacity { NumberAnimation { duration: root.transitionMs; easing.type: Easing.InOutCubic } }
-      SequentialAnimation on scale {
-        loops: Animation.Infinite
-        running: root.motion > 0
-        NumberAnimation { from: 1.0; to: 1.012; duration: 26000 / Math.max(0.25, root.motion); easing.type: Easing.InOutSine }
-        NumberAnimation { from: 1.012; to: 1.0; duration: 26000 / Math.max(0.25, root.motion); easing.type: Easing.InOutSine }
-      }
     }
   }
 
@@ -133,9 +146,54 @@ Window {
   }
 
   Item {
+    id: flightLayer
+    anchors.fill: parent
+    clip: true
+    opacity: Math.min(1, root.flight * root.motion * 0.82)
+
+    Repeater {
+      model: 7
+      Item {
+        id: flockMember
+        required property int index
+        width: 28 + (flockMember.index % 3) * 7
+        height: 13
+        y: root.height * (0.12 + (flockMember.index % 4) * 0.075)
+        x: -width
+        opacity: 0.55 + (flockMember.index % 3) * 0.12
+        Rectangle {
+          width: parent.width * 0.55; height: 3; radius: 2
+          anchors.right: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter
+          rotation: -16; color: "#5b5575"
+        }
+        Rectangle {
+          width: parent.width * 0.55; height: 3; radius: 2
+          anchors.left: parent.horizontalCenter; anchors.verticalCenter: parent.verticalCenter
+          rotation: 16; color: "#5b5575"
+        }
+        Rectangle {
+          width: 4; height: 5; radius: 2
+          anchors.centerIn: parent; color: "#5b5575"
+        }
+        SequentialAnimation on x {
+          loops: Animation.Infinite
+          running: root.flight > 0 && root.motion > 0
+          PauseAnimation { duration: flockMember.index * 5800 }
+          NumberAnimation {
+            from: -flockMember.width
+            to: root.width + flockMember.width
+            duration: (33000 + flockMember.index * 4200) / Math.max(0.25, root.motion * root.flight)
+            easing.type: Easing.InOutSine
+          }
+        }
+      }
+    }
+  }
+
+  Item {
     id: fogLayer
     anchors.fill: parent
-    opacity: 0.055 * root.motion
+    opacity: Math.min(0.13, 0.055 * root.motion * root.mist)
     clip: true
 
     Repeater {
@@ -147,16 +205,21 @@ Window {
         height: root.height * (0.08 + fogBand.index * 0.018)
         y: root.height * (0.48 + fogBand.index * 0.13)
         radius: height / 2
-        color: fogBand.index % 2 ? "#a79fca" : "#dad5e8"
+        gradient: Gradient {
+          GradientStop { position: 0.0; color: "#00dad5e8" }
+          GradientStop { position: 0.36; color: fogBand.index % 2 ? "#80a79fca" : "#80dad5e8" }
+          GradientStop { position: 0.64; color: fogBand.index % 2 ? "#80a79fca" : "#80dad5e8" }
+          GradientStop { position: 1.0; color: "#00dad5e8" }
+        }
         x: -width
         SequentialAnimation on x {
           loops: Animation.Infinite
-          running: root.motion > 0
+          running: root.mist > 0 && root.motion > 0
           PauseAnimation { duration: fogBand.index * 4200 }
           NumberAnimation {
             from: -root.width
             to: root.width * 1.2
-            duration: (62000 + fogBand.index * 17000) / Math.max(0.25, root.motion)
+            duration: (62000 + fogBand.index * 17000) / Math.max(0.25, root.motion * root.mist)
             easing.type: Easing.InOutSine
           }
         }
@@ -164,6 +227,38 @@ Window {
     }
   }
 
+  Item {
+    id: lanternLayer
+    anchors.fill: parent
+    opacity: Math.min(1, root.lanterns * root.motion)
+    Repeater {
+      model: 14
+      Item {
+        id: lanternMote
+        required property int index
+        width: 34; height: 34
+        x: root.width * (0.06 + (lanternMote.index * 0.137) % 0.88)
+        y: root.height * (0.46 + (lanternMote.index % 5) * 0.085)
+        opacity: 0.14 + (lanternMote.index % 4) * 0.035
+        Rectangle {
+          anchors.centerIn: parent
+          width: 32; height: 32; radius: 16
+          color: "#d99338"; opacity: 0.23
+        }
+        Rectangle {
+          anchors.centerIn: parent
+          width: 6; height: 6; radius: 3
+          color: "#ffe7a6"
+        }
+        SequentialAnimation on opacity {
+          loops: Animation.Infinite
+          running: root.lanterns > 0 && root.motion > 0
+          NumberAnimation { to: 0.35; duration: 1400 + lanternMote.index * 120 }
+          NumberAnimation { to: 0.10; duration: 1900 + lanternMote.index * 160 }
+        }
+      }
+    }
+  }
   Rectangle {
     id: lightning
     anchors.fill: parent
@@ -177,8 +272,8 @@ Window {
   }
 
   Timer {
-    interval: 37000
-    running: root.motion > 0
+    interval: Math.max(9000, 60000 / Math.max(0.25, root.motion * root.lightningLevel))
+    running: root.motion > 0 && root.lightningLevel > 0
     repeat: true
     onTriggered: if (String(root.options.theme || "moonlit") !== "harvest") lightningAnimation.restart()
   }

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "experience": {
     "mode": "fun",
     "scene": "rotation",
@@ -13,7 +13,13 @@
   },
   "art": {
     "theme": "moonlit",
-    "motion": 0.7
+    "motion": 0.7,
+    "effects": {
+      "mist": 0.7,
+      "flight": 0.6,
+      "lanterns": 0.65,
+      "lightning": 0.35
+    }
   },
   "sound": {
     "enabled": false,

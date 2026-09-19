@@ -6,9 +6,9 @@ All notable changes follow Keep a Changelog. Versions use Semantic Versioning.
 
 ### Changed
 
-- Replaced the terminal ANSI renderer with a GPU visual scene player: `scripts/visual-player.py` plus `visual/Screensaver.qml` present bundled 2560×1440 WebP plates fullscreen with cover cropping, long crossfades, breathing scale, drifting fog, theme overlays, and restrained lightning.
-- Reframed the control room as the Visual Collection: scene or full-collection rotation, enabled-scene selection, rotation interval, theme, and motion intensity.
-- Migrated configuration to schema version 2 with safe upgrade from version 1; element counts, palettes, and status text were removed.
+- Replaced the terminal ANSI renderer with a GPU visual scene player: `scripts/visual-player.py` plus `visual/Screensaver.qml` present bundled 2560×1440 WebP plates fullscreen with full-frame aspect preservation, long crossfades, theme overlays, and independently animated atmosphere planes.
+- Reframed the control room as the Visual Collection: scene or full-collection rotation, enabled-scene selection, rotation interval, theme, master motion, and individual mist, flight, lantern, and storm controls.
+- Migrated configuration to schema version 3 with safe upgrades from versions 1 and 2; element counts, palettes, and status text were removed.
 - Rewrote README, architecture, configuration, scene-authoring, roadmap, security, agent instructions, and the project website around the authored visual collection.
 - Regenerated the project preview as a four-scene contact sheet.
 

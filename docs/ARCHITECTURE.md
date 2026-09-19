@@ -31,11 +31,9 @@ flowchart LR
 `visual/Screensaver.qml` owns presentation:
 
 - two `Image` planes alternate and crossfade;
-- `PreserveAspectCrop` fills any monitor while preserving the 16:9 composition;
-- slow scale motion gives the plate a restrained breathing effect;
-- translucent fog bands move independently from the artwork;
+- `PreserveAspectFit` keeps the complete 16:9 plate visible at every display aspect ratio—no scale or crop;
+- distant flying silhouettes, midground fog, foreground lantern motes, and storm light form independently animated stage planes;
 - a theme overlay shifts the complete collection without recoloring source files;
-- rare lightning affects the stage, not the asset;
 - a key, click, wheel, or optionally pointer motion closes the window after an arming delay.
 
 The player never rasterizes or mutates source art at runtime. Scene switches change image sources only at the configured interval.
@@ -81,7 +79,7 @@ Audio is disabled by default. No runtime network request occurs.
 | Configuration | 256 KiB input cap; atomic writes in mode-0700 directory |
 | Scene assets | Four packaged 2560×1440 WebP files; no remote loading |
 | Scene rotation | 15–900 seconds |
-| Motion multiplier | 0–2 |
+| Master motion and each atmosphere layer | 0–2 |
 | Custom media | Local regular files, allowlisted formats, 2 GiB maximum |
 | Audio leadership | One no-follow mode-0600 lock |
 | Network | None at runtime |

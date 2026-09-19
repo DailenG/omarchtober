@@ -1,6 +1,6 @@
 # Configuration Reference
 
-Omarchtober writes normalized JSON atomically to `~/.config/omarchtober/config.json`. The runtime caps input at 256 KiB and falls back to packaged defaults when the file is missing, malformed, oversized, or invalid. Schema version one is migrated to the complete visual collection.
+Omarchtober writes normalized JSON atomically to `~/.config/omarchtober/config.json`. The runtime caps input at 256 KiB and falls back to packaged defaults when the file is missing, malformed, oversized, or invalid. Schema versions one and two are migrated to version three.
 
 ## Experience
 
@@ -16,7 +16,11 @@ Omarchtober writes normalized JSON atomically to `~/.config/omarchtober/config.j
 | Key | Values | Default | Meaning |
 |---|---|---|---|
 | `art.theme` | `moonlit`, `harvest`, `spectral`, `midnight` | `moonlit` | Color treatment applied as an overlay; bundled plates are never modified. |
-| `art.motion` | 0–2 | 0.7 | Multiplier for breathing scale, fog drift, and lightning frequency. `0` freezes motion. |
+| `art.motion` | 0–2 | 0.7 | Master multiplier for every atmosphere plane. `0` freezes atmosphere animation. |
+| `art.effects.mist` | 0–2 | 0.7 | Midground fog drift and opacity. |
+| `art.effects.flight` | 0–2 | 0.6 | Distant flying-silhouette activity. |
+| `art.effects.lanterns` | 0–2 | 0.65 | Foreground lantern-mote flicker and opacity. |
+| `art.effects.lightning` | 0–2 | 0.35 | Storm-light frequency. |
 
 ## Sound
 
@@ -43,14 +47,18 @@ Procedural layer switches have no effect when `source` is `media`. Custom media 
 
 ```json
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "experience": {
     "mode": "fun",
     "scene": "rotation",
     "enabledScenes": ["haunted_estate", "witching_woods", "pumpkin_hollow", "midnight_mausoleum"],
     "rotationSeconds": 90
   },
-  "art": { "theme": "moonlit", "motion": 0.7 },
+  "art": {
+    "theme": "moonlit",
+    "motion": 0.7,
+    "effects": { "mist": 0.7, "flight": 0.6, "lanterns": 0.65, "lightning": 0.35 }
+  },
   "sound": {
     "enabled": false,
     "volume": 22,

@@ -24,7 +24,7 @@ Every plate must belong to the same collection at a glance:
 - dense stippling, hatch, and Braille-like dithering as the primary texture;
 - four depth layers: foreground framing, mid architecture, treeline or horizon, sky;
 - no text, logos, watermarks, UI, or signatures;
-- composition readable when cover-cropped to 16:10 and 21:9 monitors.
+- composition readable in full-frame `PreserveAspectFit` presentation at 16:9, 16:10, and 21:9.
 
 ## Content safety
 

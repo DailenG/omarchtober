@@ -23,11 +23,11 @@ Every scene shares one visual language: midnight navy, ivory moonlight, lavender
 
 ## Features
 
-- GPU-rendered 16:9 artwork with cover-cropped multi-monitor presentation.
-- Full-collection rotation or a fixed favorite scene.
+- GPU-rendered 16:9 artwork with full-frame multi-monitor presentation.
 - Moonlit, Harvest, Spectral, and Midnight color treatments.
-- Slow breathing scale, crossfades, drifting fog, and restrained lightning.
-- Configurable motion and scene duration.
+- Full-frame presentation: the complete 16:9 illustration is never stretched or cropped.
+- Adjustable multi-plane atmosphere: mist, flying silhouettes, lantern motes, and storm light move independently over the static plate.
+- Configurable master motion, atmosphere layers, and scene duration.
 - Optional locally synthesized ambience or user-selected local media.
 - Tray control, idle integration, pointer/key dismissal, and unchanged Omarchy lock ownership.
 - Runtime network-free, unprivileged, and dependency-free at the Python package level.
@@ -56,7 +56,7 @@ Settings are written atomically to:
 ~/.config/omarchtober/config.json
 ```
 
-The control room selects the scene or complete rotation, theme, motion intensity, scene duration, ambience, idle launch, and dismissal behavior. Version-one terminal configurations migrate safely to the complete visual collection.
+The control room selects the scene or complete rotation, theme, full-frame presentation, master motion, four independent atmosphere layers, scene duration, ambience, idle launch, and dismissal behavior. Version-one terminal and version-two visual configurations migrate safely.
 
 Diagnostics:
 
@@ -68,7 +68,7 @@ python3 scripts/omarchtober.py --audio-test 8
 
 ## Runtime
 
-`qml6` presents the scene assets through Qt Quick. Two image planes crossfade without reconstructing the artwork, while low-opacity fog, slow scale motion, theme overlays, and lightning add life without obscuring the authored composition. The launcher opens one fullscreen player on each monitor and preserves Omarchy's existing idle and lock lifecycle.
+`qml6` presents the scene assets through Qt Quick with `PreserveAspectFit`, so the complete authored 16:9 composition remains intact on every display. Two image planes crossfade without reconstructing the artwork. Distant flying silhouettes, midground fog, foreground lantern motes, and storm light move at separate rates for a restrained 2.5D effect; each layer has its own control. The launcher opens one fullscreen player on each monitor and preserves Omarchy's existing idle and lock lifecycle.
 
 No runtime image generation, downloads, browser engine, remote assets, or privileged writes.
 

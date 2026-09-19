@@ -54,6 +54,7 @@ def write_session(config: dict[str, Any], paths: list[Path]) -> Path:
         "duration": config["experience"]["rotationSeconds"],
         "theme": config["art"]["theme"],
         "motion": config["art"]["motion"],
+        "effects": config["art"]["effects"],
         "exitOnMotion": config["integration"]["exitOnPointerMotion"],
     }
     target = directory / "session.json"

@@ -32,7 +32,11 @@ class ConfigurationTests(unittest.TestCase):
                     "enabledScenes": ["witching_woods", "unknown", "witching_woods"],
                     "rotationSeconds": 9999,
                 },
-                "art": {"theme": "missing", "motion": -8},
+                "art": {
+                    "theme": "missing",
+                    "motion": -8,
+                    "effects": {"mist": 8, "flight": -2, "lanterns": "bad", "lightning": 0.4},
+                },
                 "sound": {"volume": -20, "source": "network", "mediaPath": 5},
                 "integration": {"idleEnabled": "yes", "exitOnPointerMotion": False},
             }
@@ -41,7 +45,14 @@ class ConfigurationTests(unittest.TestCase):
         self.assertEqual(config["experience"]["scene"], "rotation")
         self.assertEqual(config["experience"]["enabledScenes"], ["witching_woods"])
         self.assertEqual(config["experience"]["rotationSeconds"], 900)
-        self.assertEqual(config["art"], {"theme": "moonlit", "motion": 0})
+        self.assertEqual(
+            config["art"],
+            {
+                "theme": "moonlit",
+                "motion": 0,
+                "effects": {"mist": 2, "flight": 0, "lanterns": 0.65, "lightning": 0.4},
+            },
+        )
         self.assertEqual(config["sound"]["source"], "procedural")
         self.assertEqual(config["sound"]["volume"], 0)
         self.assertEqual(config["sound"]["mediaPath"], "")
@@ -56,7 +67,7 @@ class ConfigurationTests(unittest.TestCase):
                 "art": {"palette": "harvest"},
             }
         )
-        self.assertEqual(migrated["schemaVersion"], 2)
+        self.assertEqual(migrated["schemaVersion"], 3)
         self.assertEqual(migrated["experience"]["mode"], "scary")
         self.assertEqual(migrated["experience"]["scene"], "rotation")
         self.assertEqual(migrated["experience"]["enabledScenes"], list(SCENES))
@@ -92,7 +103,11 @@ class VisualCollectionTests(unittest.TestCase):
             {
                 "schemaVersion": 2,
                 "experience": {"scene": "witching_woods", "rotationSeconds": 4000},
-                "art": {"theme": "spectral", "motion": 9},
+                "art": {
+                    "theme": "spectral",
+                    "motion": 9,
+                    "effects": {"mist": 0.2, "flight": 0.4, "lanterns": 0.6, "lightning": 0.8},
+                },
                 "integration": {"exitOnPointerMotion": False},
             }
         )
@@ -114,6 +129,7 @@ class VisualCollectionTests(unittest.TestCase):
         self.assertEqual(payload["duration"], 900)
         self.assertEqual(payload["theme"], "spectral")
         self.assertEqual(payload["motion"], 2.0)
+        self.assertEqual(payload["effects"], {"mist": 0.2, "flight": 0.4, "lanterns": 0.6, "lightning": 0.8})
         self.assertFalse(payload["exitOnMotion"])
 
 
