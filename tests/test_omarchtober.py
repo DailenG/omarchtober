@@ -117,6 +117,51 @@ class VisualCollectionTests(unittest.TestCase):
         for layer in (canopy, grounds):
             self.assertGreater(Path(layer["source"]).stat().st_size, 100_000)
 
+    def test_every_scene_ships_bounded_emissive_lights(self) -> None:
+        config = defaults()
+        light_sets = visual_player.scene_lights(visual_player.scene_paths(config))
+        self.assertEqual(len(light_sets), len(SCENES))
+        for lights in light_sets:
+            self.assertGreater(len(lights), 0)
+            self.assertLessEqual(len(lights), 24)
+            for light in lights:
+                self.assertTrue(0.0 <= light["x"] <= 1.0)
+                self.assertTrue(0.0 <= light["y"] <= 1.0)
+                self.assertTrue(0.004 <= light["radius"] <= 0.12)
+                self.assertTrue(0.0 <= light["intensity"] <= 0.6)
+                self.assertTrue(1800 <= light["period"] <= 12000)
+
+    def test_out_of_range_light_entries_are_clamped_or_dropped(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            scene = root / "scenes" / "custom.webp"
+            scene.parent.mkdir(parents=True)
+            scene.write_bytes(b"plate")
+            manifest = root / "motion" / "custom" / "lights.json"
+            manifest.parent.mkdir(parents=True)
+            manifest.write_text(
+                json.dumps(
+                    {
+                        "lights": [
+                            {"x": 5, "y": -3, "radius": 9, "intensity": 4, "period": 10},
+                            {"x": 0.5, "radius": 0.02},
+                            "not-a-light",
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            previous = visual_player.MOTION_ROOT
+            visual_player.MOTION_ROOT = root / "motion"
+            try:
+                lights = visual_player.scene_lights([scene])[0]
+            finally:
+                visual_player.MOTION_ROOT = previous
+        self.assertEqual(
+            lights,
+            [{"x": 1.0, "y": 0.0, "radius": 0.12, "intensity": 0.6, "period": 1800}],
+        )
+
     def test_session_handoff_exposes_private_normalized_payload(self) -> None:
         config = normalize_config(
             {

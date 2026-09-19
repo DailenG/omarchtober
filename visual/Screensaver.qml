@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 import QtCore
 import QtQuick
+import QtQuick.Shapes
 import QtQuick.Window
 Window {
   id: root
@@ -19,6 +20,7 @@ Window {
   property real parallaxDepth: 0.55
   property var sceneLayers: []
   property bool transitionPending: false
+  property var sceneLightSets: []
   property var pendingIncoming: null
   property var pendingOutgoing: null
   property int transitionMs: 2800
@@ -58,6 +60,10 @@ Window {
     return Array.isArray(sceneLayers[index]) ? sceneLayers[index] : []
   }
 
+  function lightSet(index) {
+    return Array.isArray(sceneLightSets[index]) ? sceneLightSets[index] : []
+  }
+
   function parseOptions() {
     var parsed = readSession()
     options = parsed && typeof parsed === "object" ? parsed : ({})
@@ -69,12 +75,14 @@ Window {
     }
     scenePaths = files
     sceneLayers = Array.isArray(options.layers) ? options.layers : []
+    sceneLightSets = Array.isArray(options.lights) ? options.lights : []
     var requested = Number(options.motion)
     motion = isFinite(requested) ? Math.max(0, Math.min(2, requested)) : 0.7
     var requestedParallax = Number(options.parallaxDepth)
     parallaxDepth = isFinite(requestedParallax) ? Math.max(0, Math.min(2, requestedParallax)) : 0.55
     if (scenePaths.length > 0) {
       sceneA.layerSet = layerSet(0)
+      sceneA.lightSet = lightSet(0)
       sceneA.scenePath = scenePaths[0]
       sceneA.opacity = 1
       sceneB.opacity = 0
@@ -102,6 +110,7 @@ Window {
     pendingIncoming = frontIsA ? sceneB : sceneA
     pendingIncoming.opacity = 0
     pendingIncoming.layerSet = layerSet(sceneIndex)
+    pendingIncoming.lightSet = lightSet(sceneIndex)
     pendingIncoming.scenePath = scenePaths[sceneIndex]
     transitionPending = true
     beginTransition(pendingIncoming)
@@ -140,6 +149,7 @@ Window {
     id: sceneStack
     property string scenePath: ""
     property var layerSet: []
+    property var lightSet: []
     property bool contentReady: false
     property var layerReadiness: []
     transform: [
@@ -250,6 +260,59 @@ Window {
             duration: (51000 + layerPlane.index * 4700) / Math.max(0.25, root.motion)
             easing.type: Easing.InOutSine
           }
+        }
+      }
+    }
+
+    Repeater {
+      id: lightRepeater
+      model: sceneStack.lightSet
+
+      delegate: Item {
+        id: lightPoint
+        required property int index
+        required property var modelData
+
+        readonly property real span: Number(lightPoint.modelData.radius) * sceneStack.width * 2
+        x: Number(lightPoint.modelData.x) * sceneStack.width - span / 2
+        y: Number(lightPoint.modelData.y) * sceneStack.height - span / 2
+        width: span
+        height: span
+        opacity: Number(lightPoint.modelData.intensity)
+
+        Shape {
+          anchors.fill: parent
+          asynchronous: false
+          preferredRendererType: Shape.CurveRenderer
+
+          ShapePath {
+            strokeWidth: -1
+            fillGradient: RadialGradient {
+              centerX: lightPoint.span / 2
+              centerY: lightPoint.span / 2
+              centerRadius: lightPoint.span / 2
+              focalX: centerX
+              focalY: centerY
+              GradientStop { position: 0.0; color: "#ffd88a" }
+              GradientStop { position: 0.45; color: "#66ffb765" }
+              GradientStop { position: 1.0; color: "#00ffb765" }
+            }
+            PathAngleArc {
+              centerX: lightPoint.span / 2
+              centerY: lightPoint.span / 2
+              radiusX: lightPoint.span / 2
+              radiusY: lightPoint.span / 2
+              startAngle: 0
+              sweepAngle: 360
+            }
+          }
+        }
+
+        SequentialAnimation on scale {
+          loops: Animation.Infinite
+          running: root.motion > 0
+          NumberAnimation { to: 1.16; duration: Number(lightPoint.modelData.period) / Math.max(0.35, root.motion); easing.type: Easing.InOutSine }
+          NumberAnimation { to: 0.9; duration: Number(lightPoint.modelData.period) * 1.3 / Math.max(0.35, root.motion); easing.type: Easing.InOutSine }
         }
       }
     }

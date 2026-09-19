@@ -34,6 +34,7 @@ flowchart LR
 - at `art.motion: 0`, `PreserveAspectFit` keeps the complete 16:9 plate visible at every display aspect ratio—no scale or crop;
 - at a positive motion pace, one shared bounded camera sweep scales each stack by 4% and travels left-to-right before returning, keeping the art frame covered without user interaction;
 - a scene may supply a local `assets/parallax/<scene>/layers.json` manifest with transparent, full-resolution same-canvas layers; Estate's layers shift independently relative to the shared camera sweep.
+- each scene loads a bounded `assets/motion/<scene>/lights.json` manifest and renders soft amber radial glows that pulse at per-light periods over the plate's existing lamps;
 - a theme overlay shifts the complete collection without recoloring source files;
 - a key, click, wheel, or optionally pointer motion closes the window after an arming delay.
 
@@ -79,6 +80,7 @@ Audio is disabled by default. No runtime network request occurs.
 | Scene assets | Four packaged 2560×1440 WebP files; no remote loading |
 | Scene rotation | 15–900 seconds |
 | Automatic camera pace and Estate parallax depth | 0–2 |
+| Scene lights | 24 per scene; bounded position, radius, intensity, and period |
 | Custom media | Local regular files, allowlisted formats, 2 GiB maximum |
 | Audio leadership | One no-follow mode-0600 lock |
 | Network | None at runtime |

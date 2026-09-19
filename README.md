@@ -27,6 +27,7 @@ Every scene shares one visual language: midnight navy, ivory moonlight, lavender
 - Moonlit, Harvest, Spectral, and Midnight color treatments.
 - Full-frame presentation at rest; automatic camera travel uses bounded overscan to keep its 16:9 frame filled.
 - Every scene has an automatic, non-interactive camera sweep; `Automatic Camera Pace` controls how quickly it travels left-to-right and returns.
+- Breathing lamplight in every scene: windows and lanterns glow and pulse at positions derived from each plate's own emissive pixels.
 - Haunted Estate adds two source-derived, feathered high-resolution depth layers that shift relative to the sweep; Parallax Depth `0` hides those layers.
 - Optional locally synthesized ambience or user-selected local media.
 - Tray control, idle integration, pointer/key dismissal, and unchanged Omarchy lock ownership.

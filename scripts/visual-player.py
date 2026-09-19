@@ -28,6 +28,7 @@ SCENE_FILES = {
 }
 
 PARALLAX_ROOT = PLUGIN_DIR / "assets" / "parallax"
+MOTION_ROOT = PLUGIN_DIR / "assets" / "motion"
 
 
 def scene_layers(paths: list[Path]) -> list[list[dict[str, Any]]]:
@@ -71,6 +72,36 @@ def scene_layers(paths: list[Path]) -> list[list[dict[str, Any]]]:
     return all_layers
 
 
+def scene_lights(paths: list[Path]) -> list[list[dict[str, Any]]]:
+    all_lights: list[list[dict[str, Any]]] = []
+    for path in paths:
+        metadata_path = MOTION_ROOT / path.stem / "lights.json"
+        try:
+            metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            all_lights.append([])
+            continue
+        entries = metadata.get("lights") if isinstance(metadata, dict) else []
+        lights: list[dict[str, Any]] = []
+        if isinstance(entries, list):
+            for entry in entries[:24]:
+                if not isinstance(entry, dict):
+                    continue
+                try:
+                    light = {
+                        "x": max(0.0, min(1.0, float(entry["x"]))),
+                        "y": max(0.0, min(1.0, float(entry["y"]))),
+                        "radius": max(0.004, min(0.12, float(entry["radius"]))),
+                        "intensity": max(0.0, min(0.6, float(entry["intensity"]))),
+                        "period": int(max(1800, min(12000, float(entry["period"])))),
+                    }
+                except (KeyError, TypeError, ValueError):
+                    continue
+                lights.append(light)
+        all_lights.append(lights)
+    return all_lights
+
+
 def scene_paths(config: dict[str, Any]) -> list[Path]:
     experience = config["experience"]
     selected = experience["scene"]
@@ -95,6 +126,7 @@ def write_session(config: dict[str, Any], paths: list[Path]) -> Path:
     payload = {
         "scenes": [str(path) for path in paths],
         "layers": scene_layers(paths),
+        "lights": scene_lights(paths),
         "duration": config["experience"]["rotationSeconds"],
         "theme": config["art"]["theme"],
         "motion": config["art"]["motion"],
