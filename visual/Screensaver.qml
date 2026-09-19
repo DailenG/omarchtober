@@ -23,7 +23,7 @@ Window {
   property var pendingOutgoing: null
   property int transitionMs: 2800
   property real cameraOffset: 0
-  readonly property real cameraAmplitude: artFrame.width * 0.0125
+  readonly property real cameraAmplitude: artFrame.width * 0.0175
 
   function sessionCandidates() {
     var dirs = [

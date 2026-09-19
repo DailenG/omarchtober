@@ -11,6 +11,7 @@ All notable changes follow Keep a Changelog. Versions use Semantic Versioning.
 - Migrated configuration to schema version 5 with safe upgrades from versions 1 through 4; retired the generic atmosphere controls rather than layering procedural effects over the authored plates.
 - Added an automatic, non-interactive left-to-right camera sweep for every scene; the existing motion control now sets its pace and freezes it at `0`.
 - Tightened the default automatic camera cadence so the full left-to-right journey remains legible within a normal scene rotation.
+- Increased bounded camera travel to use the available overscan and make the automatic sweep materially visible at the default pace.
 - Added a real-parallax asset pack for Haunted Estate: two transparent, source-derived 2560×1440 feathered depth layers plus a validated local multi-layer manifest. Layer stacks now crossfade with their base plates and apply per-layer manifest depth; setting both Automatic Camera Pace and Parallax Depth to `0` retains a pixel-faithful static baseline.
 - Rewrote README, architecture, configuration, scene-authoring, roadmap, security, agent instructions, and the project website around the authored visual collection.
 - Regenerated the project preview as a four-scene contact sheet.
