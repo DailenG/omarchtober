@@ -279,13 +279,13 @@ Window {
     NumberAnimation {
       from: -root.cameraAmplitude
       to: root.cameraAmplitude
-      duration: 30000 / Math.max(0.25, root.motion)
+      duration: 20000 / Math.max(0.25, root.motion)
       easing.type: Easing.InOutSine
     }
     NumberAnimation {
       from: root.cameraAmplitude
       to: -root.cameraAmplitude
-      duration: 30000 / Math.max(0.25, root.motion)
+      duration: 20000 / Math.max(0.25, root.motion)
       easing.type: Easing.InOutSine
     }
   }
