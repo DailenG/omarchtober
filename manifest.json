@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "id": "dailen.omarchtober",
   "name": "Omarchtober",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": "Dailen Gunter",
   "license": "MIT",
-  "description": "A living collection of illustrated Halloween scenes for Omarchy.",
+  "description": "An illustrated collection of Halloween scenes for Omarchy.",
   "kinds": [
     "service",
     "overlay"

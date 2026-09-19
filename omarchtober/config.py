@@ -55,7 +55,7 @@ def normalize_config(raw: Any) -> dict[str, Any]:
     base = defaults()
     incoming = raw if isinstance(raw, dict) else {}
     result = copy.deepcopy(base)
-    current_schema = incoming.get("schemaVersion") in {2, 3, base["schemaVersion"]}
+    current_schema = incoming.get("schemaVersion") in {2, 3, 4, base["schemaVersion"]}
 
     experience = incoming.get("experience") if isinstance(incoming.get("experience"), dict) else {}
     mode = str(experience.get("mode", base["experience"]["mode"]))
@@ -82,11 +82,6 @@ def normalize_config(raw: Any) -> dict[str, Any]:
     result["art"]["parallax"] = round(
         _number(art.get("parallax"), 0, 2, base["art"]["parallax"]), 2
     )
-    effects = art.get("effects") if isinstance(art.get("effects"), dict) else {}
-    for key in ("mist", "flight", "lanterns", "lightning"):
-        result["art"]["effects"][key] = round(
-            _number(effects.get(key), 0, 2, base["art"]["effects"][key]), 2
-        )
 
     sound = incoming.get("sound") if isinstance(incoming.get("sound"), dict) else {}
     result["sound"]["enabled"] = _boolean(sound.get("enabled"), base["sound"]["enabled"])

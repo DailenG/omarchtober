@@ -16,7 +16,7 @@ Item {
   property string pendingSaveText: ""
   property string statusLine: "VISUAL COLLECTION READY"
   property var defaults: ({
-    schemaVersion: 4,
+    schemaVersion: 5,
     experience: {
       mode: "fun",
       scene: "rotation",
@@ -26,8 +26,7 @@ Item {
     art: {
       theme: "moonlit",
       motion: 0.7,
-      parallax: 0.55,
-      effects: { mist: 0.7, flight: 0.6, lanterns: 0.65, lightning: 0.35 }
+      parallax: 0.55
     },
     sound: { enabled: false, volume: 22, source: "procedural", mediaPath: "", wind: true, thunder: true, creatures: true },
     integration: { idleEnabled: true, exitOnPointerMotion: true }
@@ -84,7 +83,7 @@ Item {
   function alphaColor(value, opacity) { return Qt.rgba(value.r, value.g, value.b, opacity) }
   function normalise(raw) {
     var incoming = raw && typeof raw === "object" ? raw : ({})
-    if (incoming.schemaVersion !== 2 && incoming.schemaVersion !== 3 && incoming.schemaVersion !== 4) incoming = ({})
+    if (incoming.schemaVersion !== 2 && incoming.schemaVersion !== 3 && incoming.schemaVersion !== 4 && incoming.schemaVersion !== 5) incoming = ({})
     var next = clone(defaults)
     var experience = incoming.experience && typeof incoming.experience === "object" ? incoming.experience : ({})
     next.experience.mode = experience.mode === "scary" ? "scary" : "fun"
@@ -104,11 +103,6 @@ Item {
     next.art.theme = knownTheme(theme) ? theme : defaults.art.theme
     next.art.motion = Math.round(clamp(art.motion, 0, 2, defaults.art.motion) * 100) / 100
     next.art.parallax = Math.round(clamp(art.parallax, 0, 2, defaults.art.parallax) * 100) / 100
-    var effects = art.effects && typeof art.effects === "object" ? art.effects : ({})
-    next.art.effects.mist = Math.round(clamp(effects.mist, 0, 2, defaults.art.effects.mist) * 100) / 100
-    next.art.effects.flight = Math.round(clamp(effects.flight, 0, 2, defaults.art.effects.flight) * 100) / 100
-    next.art.effects.lanterns = Math.round(clamp(effects.lanterns, 0, 2, defaults.art.effects.lanterns) * 100) / 100
-    next.art.effects.lightning = Math.round(clamp(effects.lightning, 0, 2, defaults.art.effects.lightning) * 100) / 100
     var sound = incoming.sound && typeof incoming.sound === "object" ? incoming.sound : ({})
     next.sound.enabled = typeof sound.enabled === "boolean" ? sound.enabled : defaults.sound.enabled
     next.sound.volume = Math.round(clamp(sound.volume, 0, 100, defaults.sound.volume))
@@ -370,7 +364,7 @@ Item {
           Column {
             anchors.left: parent.left; anchors.bottom: parent.bottom; anchors.margins: 18; spacing: 3
             Label { text: root.config.experience.scene === "rotation" ? "THE COMPLETE COLLECTION" : root.config.experience.scene.replace(/_/g, " ").toUpperCase(); color: "#fffaf0"; font.pixelSize: 21; font.bold: true }
-            Label { text: "GPU-rendered illustrated scenes · subtle motion · multi-monitor"; color: "#d0c9db"; font.pixelSize: 12 }
+            Label { text: "GPU-rendered illustrated scenes · full-frame · multi-monitor"; color: "#d0c9db"; font.pixelSize: 12 }
           }
         }
 
@@ -418,7 +412,7 @@ Item {
 
           ColumnLayout {
             Layout.fillWidth: true
-            Label { text: "MASTER MOTION · " + Number(root.config.art.motion).toFixed(2); color: "#d8d3e4"; font.pixelSize: 11; font.bold: true }
+            Label { text: "ESTATE PARALLAX MOTION · " + Number(root.config.art.motion).toFixed(2); color: "#d8d3e4"; font.pixelSize: 11; font.bold: true }
             DarkSlider { id: masterMotionSlider; Layout.fillWidth: true; from: 0; to: 2; value: root.config.art.motion; onMoved: root.updateConfig(function(next) { next.art.motion = masterMotionSlider.value }) }
           }
           ColumnLayout {
@@ -430,26 +424,6 @@ Item {
             Layout.fillWidth: true
             Label { text: "PARALLAX DEPTH · " + Number(root.config.art.parallax).toFixed(2); color: "#d8d3e4"; font.pixelSize: 11; font.bold: true }
             DarkSlider { id: parallaxSlider; Layout.fillWidth: true; from: 0; to: 2; value: root.config.art.parallax; onMoved: root.updateConfig(function(next) { next.art.parallax = parallaxSlider.value }) }
-          }
-          ColumnLayout {
-            Layout.fillWidth: true
-            Label { text: "MIST LAYER · " + Number(root.config.art.effects.mist).toFixed(2); color: "#d8d3e4"; font.pixelSize: 11; font.bold: true }
-            DarkSlider { id: mistSlider; Layout.fillWidth: true; from: 0; to: 2; value: root.config.art.effects.mist; onMoved: root.updateConfig(function(next) { next.art.effects.mist = mistSlider.value }) }
-          }
-          ColumnLayout {
-            Layout.fillWidth: true
-            Label { text: "SKY LIFE · " + Number(root.config.art.effects.flight).toFixed(2); color: "#d8d3e4"; font.pixelSize: 11; font.bold: true }
-            DarkSlider { id: flightSlider; Layout.fillWidth: true; from: 0; to: 2; value: root.config.art.effects.flight; onMoved: root.updateConfig(function(next) { next.art.effects.flight = flightSlider.value }) }
-          }
-          ColumnLayout {
-            Layout.fillWidth: true
-            Label { text: "LANTERN MOTES · " + Number(root.config.art.effects.lanterns).toFixed(2); color: "#d8d3e4"; font.pixelSize: 11; font.bold: true }
-            DarkSlider { id: lanternSlider; Layout.fillWidth: true; from: 0; to: 2; value: root.config.art.effects.lanterns; onMoved: root.updateConfig(function(next) { next.art.effects.lanterns = lanternSlider.value }) }
-          }
-          ColumnLayout {
-            Layout.fillWidth: true
-            Label { text: "STORM LIGHT · " + Number(root.config.art.effects.lightning).toFixed(2); color: "#d8d3e4"; font.pixelSize: 11; font.bold: true }
-            DarkSlider { id: lightningSlider; Layout.fillWidth: true; from: 0; to: 2; value: root.config.art.effects.lightning; onMoved: root.updateConfig(function(next) { next.art.effects.lightning = lightningSlider.value }) }
           }
           RowLayout {
             Layout.fillWidth: true

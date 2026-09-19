@@ -36,7 +36,6 @@ class ConfigurationTests(unittest.TestCase):
                     "theme": "missing",
                     "motion": -8,
                     "parallax": 8,
-                    "effects": {"mist": 8, "flight": -2, "lanterns": "bad", "lightning": 0.4},
                 },
                 "sound": {"volume": -20, "source": "network", "mediaPath": 5},
                 "integration": {"idleEnabled": "yes", "exitOnPointerMotion": False},
@@ -52,7 +51,6 @@ class ConfigurationTests(unittest.TestCase):
                 "theme": "moonlit",
                 "motion": 0,
                 "parallax": 2,
-                "effects": {"mist": 2, "flight": 0, "lanterns": 0.65, "lightning": 0.4},
             },
         )
         self.assertEqual(config["sound"]["source"], "procedural")
@@ -69,7 +67,7 @@ class ConfigurationTests(unittest.TestCase):
                 "art": {"palette": "harvest"},
             }
         )
-        self.assertEqual(migrated["schemaVersion"], 4)
+        self.assertEqual(migrated["schemaVersion"], 5)
         self.assertEqual(migrated["experience"]["mode"], "scary")
         self.assertEqual(migrated["experience"]["scene"], "rotation")
         self.assertEqual(migrated["experience"]["enabledScenes"], list(SCENES))
@@ -128,7 +126,6 @@ class VisualCollectionTests(unittest.TestCase):
                     "theme": "spectral",
                     "motion": 9,
                     "parallax": 0.8,
-                    "effects": {"mist": 0.2, "flight": 0.4, "lanterns": 0.6, "lightning": 0.8},
                 },
                 "integration": {"exitOnPointerMotion": False},
             }
@@ -154,7 +151,6 @@ class VisualCollectionTests(unittest.TestCase):
         self.assertEqual(payload["parallaxDepth"], 0.8)
         self.assertEqual(len(payload["layers"]), 1)
         self.assertEqual(payload["layers"][0], [])
-        self.assertEqual(payload["effects"], {"mist": 0.2, "flight": 0.4, "lanterns": 0.6, "lightning": 0.8})
         self.assertFalse(payload["exitOnMotion"])
 
 

@@ -34,7 +34,6 @@ flowchart LR
 - `PreserveAspectFit` keeps the complete 16:9 plate visible at every display aspect ratio—no scale or crop;
 - a scene may supply a local `assets/parallax/<scene>/layers.json` manifest with transparent, full-resolution same-canvas layers;
 - every manifest layer independently applies bounded autonomous drift, using its validated `depth`, amplitude, and opacity; Estate's source-derived feathered canopy and grounds layers remain native 2560×1440;
-- distant flying silhouettes, midground fog, foreground lantern motes, and storm light form additional independently animated stage planes;
 - a theme overlay shifts the complete collection without recoloring source files;
 - a key, click, wheel, or optionally pointer motion closes the window after an arming delay.
 
@@ -55,7 +54,7 @@ See [Scene Authoring](SCENE_AUTHORING.md) for production and acceptance requirem
 
 ## Configuration
 
-The QML control room and Python runtime normalize the same schema independently. A missing, malformed, partial, oversized, or out-of-range user file therefore cannot prevent startup. Schema versions one through three migrate safely to version four.
+The QML control room and Python runtime normalize the same schema independently. A missing, malformed, partial, oversized, or out-of-range user file therefore cannot prevent startup. Schema versions one through four migrate safely to version five.
 
 ## Multi-monitor and idle behavior
 
@@ -79,7 +78,7 @@ Audio is disabled by default. No runtime network request occurs.
 | Configuration | 256 KiB input cap; atomic writes in mode-0700 directory |
 | Scene assets | Four packaged 2560×1440 WebP files; no remote loading |
 | Scene rotation | 15–900 seconds |
-| Master motion and each atmosphere layer | 0–2 |
+| Estate parallax motion and depth | 0–2 |
 | Custom media | Local regular files, allowlisted formats, 2 GiB maximum |
 | Audio leadership | One no-follow mode-0600 lock |
 | Network | None at runtime |

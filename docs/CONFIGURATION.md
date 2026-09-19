@@ -1,6 +1,6 @@
 # Configuration Reference
 
-Omarchtober writes normalized JSON atomically to `~/.config/omarchtober/config.json`. The runtime caps input at 256 KiB and falls back to packaged defaults when the file is missing, malformed, oversized, or invalid. Schema versions one through three are migrated to version four.
+Omarchtober writes normalized JSON atomically to `~/.config/omarchtober/config.json`. The runtime caps input at 256 KiB and falls back to packaged defaults when the file is missing, malformed, oversized, or invalid. Schema versions one through four are migrated to version five.
 
 ## Experience
 
@@ -16,12 +16,8 @@ Omarchtober writes normalized JSON atomically to `~/.config/omarchtober/config.j
 | Key | Values | Default | Meaning |
 |---|---|---|---|
 | `art.theme` | `moonlit`, `harvest`, `spectral`, `midnight` | `moonlit` | Color treatment applied as an overlay; bundled plates are never modified. |
-| `art.motion` | 0–2 | 0.7 | Master multiplier for every animated plane. `0` freezes parallax and atmosphere animation. |
+| `art.motion` | 0–2 | 0.7 | Master multiplier for authored parallax movement. `0` freezes parallax animation. |
 | `art.parallax` | 0–2 | 0.55 | Multiplies every scene's parallax-layer displacement and opacity. `0` returns the plate to its original static composition. |
-| `art.effects.mist` | 0–2 | 0.7 | Midground fog drift and opacity. |
-| `art.effects.flight` | 0–2 | 0.6 | Distant flying-silhouette activity. |
-| `art.effects.lanterns` | 0–2 | 0.65 | Foreground lantern-mote flicker and opacity. |
-| `art.effects.lightning` | 0–2 | 0.35 | Storm-light frequency. |
 
 ## Sound
 
@@ -48,7 +44,7 @@ Procedural layer switches have no effect when `source` is `media`. Custom media 
 
 ```json
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "experience": {
     "mode": "fun",
     "scene": "rotation",
@@ -58,8 +54,7 @@ Procedural layer switches have no effect when `source` is `media`. Custom media 
   "art": {
     "theme": "moonlit",
     "motion": 0.7,
-    "parallax": 0.55,
-    "effects": { "mist": 0.7, "flight": 0.6, "lanterns": 0.65, "lightning": 0.35 }
+    "parallax": 0.55
   },
   "sound": {
     "enabled": false,
