@@ -15,8 +15,8 @@ An original, terminal-native Halloween nightscape for Omarchy. Omarchtober turns
 ## Why Omarchtober
 
 - **One safe mode switch** — Fun mode replaces undead figures and blood accents with friendly ghosts, costumed walkers, colored lights, gentler thunder, and owl-like calls.
-- **A detailed flagship scene** — a full moon, moving clouds, twinkling stars, flying bats, a Victorian manor, gravestones, pumpkins, grave risers, and walkers.
-- **Adaptive composition** — Compact, Standard, Cinematic, and Panoramic tiers add architectural and environmental detail as terminal dimensions grow instead of stretching one fixed frame.
+- **An ANSI diorama flagship** — connected Unicode architecture, Braille-textured roofs and forest, layered fog, a full moon, animated windows, bats, gravestones, pumpkins, and wandering visitors.
+- **Adaptive composition** — Compact and Standard stay deliberately simple; Cinematic and Panoramic introduce the detailed manor, atmospheric depth, framing branches, and foreground architecture.
 - **Exact population controls** — user-configured counts remain authoritative at every detail tier.
 - **Four palettes** — Moonlit, Harvest, Spectral, and Monochrome.
 - **Optional audio** — locally synthesized wind, thunder, and nocturnal calls, or a user-selected MP3/MP4/audio file through `mpv`.
@@ -94,8 +94,8 @@ The renderer derives detail from terminal cell dimensions:
 |---|---:|---|
 | Compact | below 75×25 | Essential silhouette and animation |
 | Standard | 75×25 | Full estate and graveyard |
-| Cinematic | 135×38 | Expanded wings, larger moon, detailed craters, iron fencing |
-| Panoramic | 190×48 | Bare trees, foreground fog, wide staging, and an enlarged manor on tall terminals |
+| Cinematic | 135×38 | Procedural ANSI manor, Braille texture, animated windows, iron fencing |
+| Panoramic | 190×48 | Layered forest and fog, framing branches, foreground steps, wide staging |
 
 Configured stars, bats, graves, figures, walkers, clouds, and pumpkins never increase automatically.
 

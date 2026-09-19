@@ -3,6 +3,10 @@
 All notable changes follow Keep a Changelog. Versions use Semantic Versioning.
 
 ## [Unreleased]
+### Changed
+
+- Rebuilt Cinematic and Panoramic Haunted Estate layouts as an ANSI diorama with procedural Victorian architecture, Braille roof and forest texture, layered fog, framing branches, animated windows, iron fencing, and foreground steps.
+
 
 ## [0.1.0] - 2026-09-18
 

@@ -39,7 +39,7 @@ The renderer independently normalizes the same public contract. A missing, malfo
 
 ## Adaptive composition
 
-A scene may derive layout from dimensions, but configured populations are exact. Haunted Estate uses four tiers: Compact, Standard, Cinematic, and Panoramic. Higher tiers add static architecture, landscape, and layered atmosphere; tall Panoramic terminals also enlarge the manor in terminal-cell space. None silently add configured entities.
+A scene may derive layout from dimensions, but configured populations are exact. Haunted Estate uses four tiers: Compact, Standard, Cinematic, and Panoramic. Compact and Standard use the essential sprite composition. Cinematic and Panoramic build a proportional ANSI diorama from bounded box-drawing primitives, Braille texture, layered forest and fog, framing branches, and foreground architecture. None silently add configured entities.
 
 This distinction keeps settings predictable across monitors while using available terminal cells effectively.
 
